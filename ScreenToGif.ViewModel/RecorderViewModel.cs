@@ -86,6 +86,11 @@ public class RecorderViewModel : BindableBase
         Text = "S.Command.DiscardCapture"
     };
 
+    public RoutedUICommand QuickGifCommand { get; set; } = new RoutedUICommand
+    {
+        Text = "S.Command.QuickGif"
+    };
+
     public RoutedUICommand SwitchFrequencyCommand { get; set; } = new RoutedUICommand
     {
         Text = "S.Command.SwitchCaptureFrequency",

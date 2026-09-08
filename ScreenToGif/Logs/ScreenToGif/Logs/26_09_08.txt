@@ -1,0 +1,118 @@
+► Title - 
+	Impossible to check for updates on Github
+♦ [Version] Date/Hour - 
+	[2.43.2] 09/08/2026 19:56:01
+▬ Message - 
+	Tentativo di accesso al socket con modalità non consentite dalle rispettive autorizzazioni di accesso. (api.github.com:443)
+○ Type - 
+	System.Net.Http.HttpRequestException
+▲ Source - 
+	System.Net.Http
+▼ TargetSite - 
+	Void MoveNext()
+♠ StackTrace - 
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at ScreenToGif.ViewModel.ApplicationViewModel.CheckOnGithub() in D:\Users\PC\Documents\GitHub\ScreenToGif\ScreenToGif\ViewModel\ApplicationViewModel.cs:line 973
+
+▬▬ Message - 
+	Tentativo di accesso al socket con modalità non consentite dalle rispettive autorizzazioni di accesso.
+○○ Type - 
+	System.Net.Sockets.SocketException
+▲▲ Source - 
+	System.Net.Sockets
+▼▼ TargetSite - 
+	Void ThrowException(System.Net.Sockets.SocketError, System.Threading.CancellationToken)
+♠♠ StackTrace - 
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+
+----------------------------------
+
+► Title - 
+	Impossible to check for updates on Fosshub
+♦ [Version] Date/Hour - 
+	[2.43.2] 09/08/2026 19:56:01
+▬ Message - 
+	Tentativo di accesso al socket con modalità non consentite dalle rispettive autorizzazioni di accesso. (www.fosshub.com:443)
+○ Type - 
+	System.Net.Http.HttpRequestException
+▲ Source - 
+	System.Net.Http
+▼ TargetSite - 
+	Void MoveNext()
+♠ StackTrace - 
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at ScreenToGif.ViewModel.ApplicationViewModel.CheckOnFosshub() in D:\Users\PC\Documents\GitHub\ScreenToGif\ScreenToGif\ViewModel\ApplicationViewModel.cs:line 1158
+
+▬▬ Message - 
+	Tentativo di accesso al socket con modalità non consentite dalle rispettive autorizzazioni di accesso.
+○○ Type - 
+	System.Net.Sockets.SocketException
+▲▲ Source - 
+	System.Net.Sockets
+▼▼ TargetSite - 
+	Void ThrowException(System.Net.Sockets.SocketError, System.Threading.CancellationToken)
+♠♠ StackTrace - 
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+
+----------------------------------
+
+► Title - 
+	Check for an updated localization resource
+♦ [Version] Date/Hour - 
+	[2.43.2] 09/08/2026 19:56:02
+▬ Message - 
+	Tentativo di accesso al socket con modalità non consentite dalle rispettive autorizzazioni di accesso. (api.github.com:443)
+○ Type - 
+	System.Net.Http.HttpRequestException
+▲ Source - 
+	System.Net.Http
+▼ TargetSite - 
+	Void MoveNext()
+♠ StackTrace - 
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at ScreenToGif.Util.LocalizationHelper.GetWhenResourceWasUpdatedAsync(String culture) in D:\Users\PC\Documents\GitHub\ScreenToGif\ScreenToGif.Util\LocalizationHelper.cs:line 255
+   at ScreenToGif.Util.LocalizationHelper.CheckForUpdates(String culture) in D:\Users\PC\Documents\GitHub\ScreenToGif\ScreenToGif.Util\LocalizationHelper.cs:line 186
+
+▬▬ Message - 
+	Tentativo di accesso al socket con modalità non consentite dalle rispettive autorizzazioni di accesso.
+○○ Type - 
+	System.Net.Sockets.SocketException
+▲▲ Source - 
+	System.Net.Sockets
+▼▼ TargetSite - 
+	Void ThrowException(System.Net.Sockets.SocketError, System.Threading.CancellationToken)
+♠♠ StackTrace - 
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+
+----------------------------------
+

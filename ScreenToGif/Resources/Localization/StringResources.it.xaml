@@ -657,6 +657,9 @@
     <s:String x:Key="S.Recorder.Stop">Arresta</s:String>
     <s:String x:Key="S.Recorder.Discard">Scarta</s:String>
     <s:String x:Key="S.Recorder.Snap">Scatto</s:String>
+    <s:String x:Key="S.Recorder.QuickGif">Gif rapida</s:String>
+    <s:String x:Key="S.Recorder.QuickGif.Info">Arresta la registrazione e la esporta subito come gif,&#10;salvandola sul desktop e copiandola negli appunti.</s:String>
+    <s:String x:Key="S.Recorder.QuickGif.Error">Non è stato possibile esportare la registrazione come gif.</s:String>
     <s:String x:Key="S.Recorder.Height">Altezza</s:String>
     <s:String x:Key="S.Recorder.Width">Larghezza</s:String>
     <s:String x:Key="S.Recorder.CursorFollowing">L'inseguimento del cursore è abilitato.</s:String>

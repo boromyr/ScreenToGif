@@ -1,6 +1,8 @@
 using ScreenToGif.Controls;
+using ScreenToGif.Domain.Enums;
 using ScreenToGif.Util;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -142,6 +144,20 @@ public partial class Encoder : IEncoding
             return;
 
         _encoder.WindowState = _lastState;
+    }
+
+    /// <summary>
+    /// Closes the window if there's no encoding still being processed.
+    /// </summary>
+    public static void CloseIfIdle()
+    {
+        if (_encoder == null)
+            return;
+
+        if (EncodingManager.Encodings.Any(a => a.Status == EncodingStatus.Processing))
+            return;
+
+        _encoder.Close();
     }
 
     /// <summary>

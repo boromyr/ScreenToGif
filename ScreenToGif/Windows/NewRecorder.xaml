@@ -141,6 +141,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <!--Options-->
@@ -326,8 +327,14 @@
 
                 <!--Stop (when paused/manual capture)-->
                 <n:ExtendedButton Grid.Row="1" Grid.Column="7" x:Name="StopSmallButton" ContentHeight="16" ContentWidth="16" MinWidth="65"
-                                  Text="{DynamicResource S.Recorder.Stop}" Icon="{StaticResource Vector.Stop}" Style="{StaticResource Style.Button.Horizontal}" 
+                                  Text="{DynamicResource S.Recorder.Stop}" Icon="{StaticResource Vector.Stop}" Style="{StaticResource Style.Button.Horizontal}"
                                   Command="{Binding StopCommand}" KeyGesture="{Binding StopKeyGesture, Converter={StaticResource KeyGestureToString}, UpdateSourceTrigger=PropertyChanged}"
+                                  Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Bool2Visibility}, FallbackValue={x:Static Visibility.Collapsed}}"/>
+
+                <!--Quick export as gif-->
+                <n:ExtendedButton Grid.Row="0" Grid.Column="8" Grid.RowSpan="2" x:Name="QuickGifButton" ContentHeight="24" ContentWidth="24" MinWidth="65"
+                                  Text="{DynamicResource S.Recorder.QuickGif}" Icon="{StaticResource Vector.Gif}" Style="{StaticResource Style.Button.Vertical}"
+                                  Command="{Binding QuickGifCommand}" ToolTip="{DynamicResource S.Recorder.QuickGif.Info}"
                                   Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Bool2Visibility}, FallbackValue={x:Static Visibility.Collapsed}}"/>
             </Grid>
 
@@ -341,6 +348,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto" MaxWidth="50"/>
+                    <ColumnDefinition Width="Auto" MaxWidth="26"/>
                     <ColumnDefinition Width="Auto" MaxWidth="26"/>
                     <ColumnDefinition Width="Auto" MaxWidth="26"/>
                     <ColumnDefinition Width="Auto" MaxWidth="26"/>
@@ -440,8 +448,13 @@
 
                 <!--Stop-->
                 <n:ExtendedButton Grid.Column="9" Icon="{DynamicResource Vector.Stop}" ContentHeight="20" ContentWidth="20" Padding="3"
-                                  Style="{StaticResource Style.Button.NoText}" Command="{Binding StopCommand}" KeyGesture="{Binding StopCommand, Converter={StaticResource CommandToKeyGesture}}" 
+                                  Style="{StaticResource Style.Button.NoText}" Command="{Binding StopCommand}" KeyGesture="{Binding StopCommand, Converter={StaticResource CommandToKeyGesture}}"
                                   ToolTip="{DynamicResource S.Recorder.Stop}" Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Bool2Visibility}}"/>
+
+                <!--Quick export as gif-->
+                <n:ExtendedButton Grid.Column="10" Icon="{DynamicResource Vector.Gif}" ContentHeight="20" ContentWidth="20" Padding="3"
+                                  Style="{StaticResource Style.Button.NoText}" Command="{Binding QuickGifCommand}"
+                                  ToolTip="{DynamicResource S.Recorder.QuickGif.Info}" Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Bool2Visibility}}"/>
             </Grid>
         </Grid>
     </Border>

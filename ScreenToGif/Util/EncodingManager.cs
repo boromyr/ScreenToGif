@@ -74,7 +74,11 @@ internal class EncodingManager
 
     #endregion
 
-    internal static void StartEncoding(ExportProject project, ExportPreset preset)
+    /// <summary>
+    /// Starts encoding the project on a background task.
+    /// </summary>
+    /// <returns>The id of the encoding, which can be used to track its status.</returns>
+    internal static int StartEncoding(ExportProject project, ExportPreset preset)
     {
         //If the user still wants an encoder window, here's when it should be opened.
         if (UserSettings.All.DisplayEncoder)
@@ -133,6 +137,8 @@ internal class EncodingManager
 
         //Application.Current.Dispatcher.Invoke(() => Refresh(taskId));
         Application.Current.Dispatcher?.Invoke(() => EncodingAdded(taskId));
+
+        return taskId;
     }
 
     #region Encoding manipulation

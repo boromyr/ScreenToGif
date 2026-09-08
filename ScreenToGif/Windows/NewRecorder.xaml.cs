@@ -23,6 +23,7 @@ using ScreenToGif.Util.Extensions;
 using ScreenToGif.Util.Helpers;
 using ScreenToGif.Util.Settings;
 using ScreenToGif.ViewModel;
+using ScreenToGif.ViewModel.ExportPresets.AnimatedImage.Gif;
 using ScreenToGif.Windows.Other;
 using Cursors = System.Windows.Input.Cursors;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -57,6 +58,11 @@ public partial class NewRecorder
     /// The amount of seconds of the pre start delay, plus 1 (1+1=2);
     /// </summary>
     private int _preStartCount = 1;
+
+    /// <summary>
+    /// True while the recording is being exported as a gif, when the window is kept hidden until the encoding ends.
+    /// </summary>
+    private bool _isQuickExporting;
 
     private readonly Timer _preStartTimer = new Timer();
     private readonly Timer _followTimer = new Timer();
@@ -440,6 +446,10 @@ public partial class NewRecorder
 
     private async void SystemEvents_DisplaySettingsChanged(object sender, EventArgs eventArgs)
     {
+        //While exporting, the window is hidden on purpose, so it must not be repositioned (nor displayed again).
+        if (_isQuickExporting)
+            return;
+
         if (_viewModel != null)
             _viewModel.Monitors = MonitorHelper.AllMonitorsGranular();
 
@@ -556,7 +566,7 @@ public partial class NewRecorder
     /// </summary>
     private async void KeyHookTarget(object sender, CustomKeyEventArgs e)
     {
-        if (RegionSelectHelper.IsSelecting || Stage == RecorderStages.Discarding)
+        if (RegionSelectHelper.IsSelecting || Stage == RecorderStages.Discarding || _isQuickExporting)
             return;
 
         //Capture when an user interactions happens.
@@ -602,7 +612,7 @@ public partial class NewRecorder
     {
         try
         {
-            if (RegionSelectHelper.IsSelecting || Stage == RecorderStages.Discarding)
+            if (RegionSelectHelper.IsSelecting || Stage == RecorderStages.Discarding || _isQuickExporting)
                 return;
 
             //In the future, store each mouse event, with a timestamp, independently of the capture.
@@ -970,7 +980,10 @@ public partial class NewRecorder
 
             new CommandBinding(_viewModel.DiscardCommand, async (_, _) => await Discard(),
                 (_, args) => args.CanExecute = (Stage == RecorderStages.Paused && FrameCount > 0) || (Stage == RecorderStages.Recording && (UserSettings.All.CaptureFrequency is CaptureFrequencies.Manual or CaptureFrequencies.Interaction ||
-                    UserSettings.All.RecorderDisplayDiscard) && FrameCount > 0))});
+                    UserSettings.All.RecorderDisplayDiscard) && FrameCount > 0)),
+
+            new CommandBinding(_viewModel.QuickGifCommand, async (_, _) => await QuickGif(),
+                (_, args) => args.CanExecute = Stage is RecorderStages.Recording or RecorderStages.Paused && FrameCount > 0)});
 
         _viewModel.RefreshKeyGestures();
     }
@@ -1314,6 +1327,146 @@ public partial class NewRecorder
                 MoveCommandPanel(true);
             }
         }
+    }
+
+    /// <summary>
+    /// Stops the capture and immediately encodes the recording as a gif, without going through the editor.
+    /// The resulting file is saved to the desktop and copied to the clipboard.
+    /// </summary>
+    private async Task QuickGif()
+    {
+        try
+        {
+            RecordControlsGrid.IsEnabled = false;
+            Title = "ScreenToGif - " + LocalizationHelper.Get("S.Recorder.Stopping");
+            Cursor = Cursors.AppStarting;
+
+            _limitTimer.Stop();
+            await StopCapture();
+
+            //Nothing was captured, so there's nothing to export. Fall back to the regular stop behavior.
+            if (Project?.Any != true)
+            {
+                Splash.Dismiss();
+                Stage = RecorderStages.Stopped;
+
+                FrequencyIntegerUpDown.IsEnabled = true;
+                IsRecording = false;
+                Topmost = true;
+
+                _regionSelection.DisplayGuidelines();
+                SetTaskbarButtonOverlay();
+                return;
+            }
+
+            Stage = RecorderStages.Stopped;
+            IsRecording = false;
+            _isQuickExporting = true;
+
+            var preset = BuildQuickGifPreset();
+
+            //Copying the frames is expensive, so it must not run on the UI thread.
+            var export = await Task.Run(() => Project.CopyToExport([], false, true));
+
+            var id = EncodingManager.StartEncoding(export, preset);
+
+            //Clearing the project prevents the editor from being opened with this recording.
+            Project = null;
+
+            //The window is only hidden, since closing it could let the app shut down and cancel the encoding.
+            _regionSelection.Hide();
+            ShowInTaskbar = false;
+            Hide();
+
+            EncodingStatus? status;
+
+            do
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(200));
+
+                status = EncodingManager.GetStatus(id);
+            }
+            while (status is EncodingStatus.Processing);
+
+            //The encoder window is only opened when the user opted to display it, and it's not needed after a quick export.
+            Encoder.CloseIfIdle();
+
+            if (status is EncodingStatus.Error)
+                Dialog.Ok("ScreenToGif", LocalizationHelper.Get("S.Recorder.QuickGif"), LocalizationHelper.Get("S.Recorder.QuickGif.Error"), Icons.Error);
+
+            Close();
+        }
+        catch (Exception ex)
+        {
+            LogWriter.Log(ex, "Error while quickly exporting the recording as gif.");
+            ErrorDialog.Ok("ScreenToGif", LocalizationHelper.Get("S.Recorder.QuickGif"), ex.Message, ex);
+        }
+        finally
+        {
+            if (IsLoaded)
+            {
+                Title = "ScreenToGif";
+                Cursor = Cursors.Arrow;
+                RecordControlsGrid.IsEnabled = true;
+
+                //Wait a bit, then refresh the commands.
+                await Task.Delay(TimeSpan.FromMilliseconds(200));
+
+                CommandManager.InvalidateRequerySuggested();
+                MoveCommandPanel(true);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Builds the preset used by the quick gif export, based on the embedded encoder, so that it never depends on external tools.
+    /// </summary>
+    private EmbeddedGifPreset BuildQuickGifPreset()
+    {
+        var source = UserSettings.All.ExportPresets?.OfType<EmbeddedGifPreset>().FirstOrDefault(f => f.IsSelected) ??
+                     UserSettings.All.ExportPresets?.OfType<EmbeddedGifPreset>().FirstOrDefault(f => f.IsSelectedForEncoder) ??
+                     UserSettings.All.ExportPresets?.OfType<EmbeddedGifPreset>().FirstOrDefault() ??
+                     EmbeddedGifPreset.Defaults.First();
+
+        var preset = (EmbeddedGifPreset) source.ShallowCopy();
+        var folder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+        preset.HasAutoSave = false;
+        preset.ExportPartially = false;
+        preset.ExportAsProjectToo = false;
+        preset.UploadFile = false;
+        preset.ExecuteCustomCommands = false;
+
+        preset.PickLocation = true;
+        preset.OverwriteMode = OverwriteModes.Allow;
+        preset.OutputFolder = folder;
+        preset.Extension = ".gif";
+        preset.OutputFilename = preset.ResolvedFilename = GetAvailableFilename(folder, "Recording " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), ".gif");
+
+        preset.SaveToClipboard = true;
+        preset.CopyType = CopyModes.File;
+
+        preset.Scale = this.Scale();
+        preset.Width = (int) CaptureRegion.Width;
+        preset.Height = (int) CaptureRegion.Height;
+
+        return preset;
+    }
+
+    /// <summary>
+    /// Appends a counter to the filename while a file with that name already exists in the folder.
+    /// </summary>
+    private static string GetAvailableFilename(string folder, string filename, string extension)
+    {
+        if (!File.Exists(Path.Combine(folder, filename + extension)))
+            return filename;
+
+        var count = 1;
+
+        while (File.Exists(Path.Combine(folder, $"{filename} ({count})" + extension)))
+            count++;
+
+        return $"{filename} ({count})";
     }
 
     private async Task Discard()
