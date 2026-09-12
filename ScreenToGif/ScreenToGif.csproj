@@ -131,6 +131,7 @@
   <ItemGroup>
     <PackageReference Include="SharpDX.Direct3D11" />
     <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Text.RegularExpressions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Util\Commands.cs" />

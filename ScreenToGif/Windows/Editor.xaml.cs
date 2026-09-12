@@ -215,6 +215,11 @@ namespace ScreenToGif.Windows
         private bool _abortLoading;
 
         /// <summary>
+        /// True while the capture windows are being closed, to avoid reentrancy (closing a window can activate this one again).
+        /// </summary>
+        private bool _closingCaptureWindows;
+
+        /// <summary>
         /// Lock used to prevent firing multiple times (at the same time) both the Activated/Deactivated events.
         /// </summary>
         public static readonly object ActivateLock = new();
@@ -292,6 +297,47 @@ namespace ScreenToGif.Windows
                     WasPreviewing = false;
                     PlayPause();
                 }
+            }
+
+            CloseCaptureWindows();
+        }
+
+        /// <summary>
+        /// Closes the recorder, the region selection and the startup windows that were left open behind the editor.
+        /// </summary>
+        private void CloseCaptureWindows()
+        {
+            //Closing a window can bring the focus back to the editor, which would trigger this method again.
+            if (_closingCaptureWindows || !IsLoaded)
+                return;
+
+            _closingCaptureWindows = true;
+
+            try
+            {
+                //A recorder in the middle of a capture must not be closed, otherwise the recording would be lost.
+                foreach (var recorder in Application.Current.Windows.OfType<BaseRecorder>().Where(w => w.Stage == RecorderStages.Stopped).ToList())
+                    recorder.Close();
+
+                //The region selection is usually closed by its own recorder, but it can be left behind.
+                //It's only safe to close it when no recorder is still open, since the owner would later try to hide a closed window.
+                if (!Application.Current.Windows.OfType<BaseRecorder>().Any())
+                {
+                    foreach (var selection in Application.Current.Windows.OfType<Window>().Where(w => w is RegionSelection or RegionSelector or RegionMagnifier).ToList())
+                        selection.Close();
+                }
+
+                //The startup window is closed last, since a recorder can display it again while being closed.
+                foreach (var startup in Application.Current.Windows.OfType<Startup>().ToList())
+                    startup.Close();
+            }
+            catch (Exception ex)
+            {
+                LogWriter.Log(ex, "Impossible to close the capture windows.");
+            }
+            finally
+            {
+                _closingCaptureWindows = false;
             }
         }
 
