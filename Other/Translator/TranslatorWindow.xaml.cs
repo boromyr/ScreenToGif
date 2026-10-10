@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ public partial class TranslatorWindow : Window
     private ObservableCollection<Translation> _translationList = new();
     private string _tempPath;
     private string _resourceTemplate;
+
+    private static readonly HttpClient Client = CreateClient();
 
     public TranslatorWindow()
     {
@@ -85,7 +88,7 @@ public partial class TranslatorWindow : Window
         {
             Process.Start("https://github.com/NickeManarin/ScreenToGif/wiki/Localization");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             Dialog.Ok("Translator", "Tutorial", "Error while trying to open the tutorial link");
         }
@@ -333,12 +336,7 @@ public partial class TranslatorWindow : Window
     {
         try
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/NickeManarin/ScreenToGif/contents/ScreenToGif/Resources/Localization");
-            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
-
-            var response = (HttpWebResponse)await request.GetResponseAsync();
-
-            await using (var resultStream = response.GetResponseStream())
+            await using (var resultStream = await Client.GetStreamAsync("https://api.github.com/repos/NickeManarin/ScreenToGif/contents/ScreenToGif/Resources/Localization"))
             {
                 using (var reader = new StreamReader(resultStream))
                 {
@@ -363,7 +361,7 @@ public partial class TranslatorWindow : Window
                 }
             }
         }
-        catch (WebException web)
+        catch (Exception web) when (web is WebException or HttpRequestException)
         {
             Dispatcher.Invoke(() => Dialog.Ok("Translator", "Translator - Downloading Single Resource", web.Message +
                 Environment.NewLine + "Trying to load files already downloaded."));
@@ -382,12 +380,7 @@ public partial class TranslatorWindow : Window
     {
         try
         {
-            var request = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/NickeManarin/ScreenToGif/contents/ScreenToGif/Resources/Localization");
-            request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
-
-            var response = (HttpWebResponse)await request.GetResponseAsync();
-
-            await using (var resultStream = response.GetResponseStream())
+            await using (var resultStream = await Client.GetStreamAsync("https://api.github.com/repos/NickeManarin/ScreenToGif/contents/ScreenToGif/Resources/Localization"))
             {
                 using (var reader = new StreamReader(resultStream))
                 {
@@ -414,7 +407,7 @@ public partial class TranslatorWindow : Window
                 }
             }
         }
-        catch (WebException web)
+        catch (Exception web) when (web is WebException or HttpRequestException)
         {
             Dispatcher.Invoke(() => Dialog.Ok("Translator", "Translator - Downloading Resources", web.Message +
                 Environment.NewLine + "Trying to load files already downloaded."));
@@ -429,45 +422,6 @@ public partial class TranslatorWindow : Window
         GC.Collect();
     }
 
-    private async Task DownloadFileAsync2(Uri uri, string name)
-    {
-        try
-        {
-            var file = Path.Combine(Dispatcher.Invoke<string>(() => _tempPath), name);
-
-            if (File.Exists(file))
-                File.Delete(file);
-
-            using (var webClient = new WebClient { Credentials = CredentialCache.DefaultNetworkCredentials })
-                await webClient.DownloadFileTaskAsync(uri, file);
-
-            //Saves the template for later, when exporting the translation.
-            if (name.EndsWith("en.xaml"))
-            {
-                using (var sr = new StreamReader(file, Encoding.UTF8))
-                {
-                    _resourceTemplate = await sr.ReadToEndAsync();
-                }
-            }
-
-            await using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                var dictionary = await Task.Factory.StartNew(() => (ResourceDictionary)XamlReader.Load(fs, new ParserContext { XmlSpace = "preserve" }));
-                //var dictionary = new ResourceDictionary();
-                dictionary.Source = await Task.Factory.StartNew(() => new Uri(Path.GetFullPath(file), UriKind.Absolute));
-
-                _resourceList.Add(dictionary);
-
-                if (name.EndsWith("en.xaml"))
-                    Application.Current.Resources.MergedDictionaries.Add(dictionary);
-            }
-        }
-        catch (Exception ex)
-        {
-            Dispatcher.Invoke(() => Dialog.Ok("Translator", "Translator - Downloading File", ex.Message));
-        }
-    }
-
     private async Task DownloadFileAsync(Uri uri, string name)
     {
         try
@@ -477,8 +431,7 @@ public partial class TranslatorWindow : Window
             if (File.Exists(file))
                 File.Delete(file);
 
-            using (var webClient = new WebClient { Credentials = CredentialCache.DefaultNetworkCredentials })
-                await webClient.DownloadFileTaskAsync(uri, file);
+            await File.WriteAllBytesAsync(file, await Client.GetByteArrayAsync(uri));
 
             //Replaces the special chars.
             var text = await Task.Factory.StartNew(() => File.ReadAllText(file, Encoding.UTF8).Replace("&#", "&amp;#"));
@@ -691,62 +644,12 @@ public partial class TranslatorWindow : Window
                 "yo-BJ;zgh;zh;zh-Hans-HK;zh-Hans-MO;zh-Hant;zu").Split(';').ToList();
     }
 
-    private async Task<IEnumerable<string>> GetLanguageCodesAsync()
+    private static HttpClient CreateClient()
     {
-        var path = await GetLanguageCodesPathAsync();
+        var client = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true });
+        client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393");
 
-        if (string.IsNullOrEmpty(path))
-            throw new WebException("Can't get language codes. Path to language codes is null");
-
-        var request = (HttpWebRequest)WebRequest.Create(path);
-        request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
-
-        var response = (HttpWebResponse)await request.GetResponseAsync();
-
-        using (var resultStream = response.GetResponseStream())
-        {
-            if (resultStream == null)
-                throw new WebException("Empty response from server when getting language codes");
-
-            using (var reader = new StreamReader(resultStream))
-            {
-                var result = await reader.ReadToEndAsync();
-
-                var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(result),
-                    new System.Xml.XmlDictionaryReaderQuotas());
-
-                var json = await Task<XElement>.Factory.StartNew(() => XElement.Load(jsonReader));
-                var languages = json.Elements();
-
-                return await Task.Factory.StartNew(() => languages.Where(x => x.XPathSelectElement("defs").Value != "0").Select(x => x.XPathSelectElement("lang").Value));
-            }
-        }
-    }
-
-    private async Task<string> GetLanguageCodesPathAsync()
-    {
-        var request = (HttpWebRequest)WebRequest.Create("https://datahub.io/core/language-codes/datapackage.json");
-        request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
-
-        var response = (HttpWebResponse)await request.GetResponseAsync();
-
-        using (var resultStream = response.GetResponseStream())
-        {
-            if (resultStream == null)
-                throw new WebException("Empty response from server when getting language codes path");
-
-            using (var reader = new StreamReader(resultStream))
-            {
-                var result = await reader.ReadToEndAsync();
-
-                var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(result),
-                    new System.Xml.XmlDictionaryReaderQuotas());
-
-                var json = await Task<XElement>.Factory.StartNew(() => XElement.Load(jsonReader));
-
-                return await Task.Factory.StartNew(() => json.XPathSelectElement("resources").Elements().First(x => x.XPathSelectElement("name").Value == "ietf-language-tags_json").XPathSelectElement("path").Value);
-            }
-        }
+        return client;
     }
 
     #endregion

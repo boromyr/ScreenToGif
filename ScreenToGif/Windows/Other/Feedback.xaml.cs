@@ -305,7 +305,7 @@ public partial class Feedback
                 available = drive.AvailableFreeSpace;
                 format = drive.DriveFormat;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //LogWriter.Log(e, "Not possible to get driver details");
             }

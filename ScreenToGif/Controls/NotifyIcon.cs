@@ -124,14 +124,14 @@ internal class NotifyIcon : FrameworkElement, IDisposable
         set => SetValue(NotifyToolTipTextProperty, value);
     }
 
-    public UIElement? NotifyToolTip
+    public UIElement NotifyToolTip
     {
         get => (UIElement)GetValue(NotifyToolTipProperty);
         set => SetValue(NotifyToolTipProperty, value);
     }
 
     [Bindable(true)]
-    public ToolTip? NotifyToolTipElement => (ToolTip)GetValue(NotifyToolTipElementProperty);
+    public ToolTip NotifyToolTipElement => (ToolTip)GetValue(NotifyToolTipElementProperty);
 
     public ICommand LeftClickCommand
     {

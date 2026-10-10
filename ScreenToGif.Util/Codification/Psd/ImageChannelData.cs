@@ -164,7 +164,7 @@ internal class ImageChannelData : IPsdContent
 
             ms.Position = 0;
             using (var zip = new GZipStream(ms, CompressionMode.Decompress))
-                zip.Read(buffer, 0, buffer.Length);
+                zip.ReadExactly(buffer, 0, buffer.Length);
         }
 
         return buffer;

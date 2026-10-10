@@ -34,7 +34,7 @@ namespace ScreenToGif.Native.Helpers
                 //return Image.FromHbitmap(hBmp);
                 return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBmp, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //LogWriter.Log(ex, "Impossible to get screenshot of the screen");
             }

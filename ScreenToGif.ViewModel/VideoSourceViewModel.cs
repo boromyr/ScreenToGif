@@ -625,7 +625,7 @@ public class VideoSourceViewModel : BindableBase, IDisposable
 
         if (bitmap.Height < 2 || bitmap.Width < 2)
         {
-            var error = pro.StandardError.EndOfStream ? "" : await pro.StandardError.ReadToEndAsync();
+            var error = await pro.StandardError.ReadToEndAsync();
 
             await Task.Delay(500);
 

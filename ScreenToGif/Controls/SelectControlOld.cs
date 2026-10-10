@@ -76,21 +76,6 @@ public class SelectControlOld : Control
     private TextBlock _sizeTextBlock;
 
     /// <summary>
-    /// The grid that holds the sizing controls.
-    /// </summary>
-    private Grid _rectGrid;
-
-    /// <summary>
-    /// The button that closes the sizing widget.
-    /// </summary>
-    private ExtendedButton _closeRectButton;
-
-    /// <summary>
-    /// The grid that enables the movement of the sizing widget.
-    /// </summary>
-    private Grid _moveSizeWidgetGrid;
-
-    /// <summary>
     /// The start point for the drag operation.
     /// </summary>
     private Point _startPoint;
@@ -1313,12 +1298,6 @@ public class SelectControlOld : Control
         AdjustInfo(point);
 
         e.Handled = true;
-    }
-
-    private void SizeTextBlock_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        //Open dialog asking for left/top/width/height.
-        _rectGrid.Visibility = Visibility.Visible;
     }
 
     ///<summary>

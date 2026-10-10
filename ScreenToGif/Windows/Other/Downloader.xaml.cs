@@ -3,6 +3,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using ScreenToGif.Util;
@@ -58,21 +60,31 @@ public partial class Downloader
             }
 
             //Download.
-            using (var client = new WebClient { Proxy = WebRequest.GetSystemWebProxy() })
+            using (var handler = new HttpClientHandler { Proxy = WebRequest.GetSystemWebProxy() })
+            using (var client = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan })
+            using (var response = await client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
             {
-                client.DownloadProgressChanged += (_, args) =>
+                response.EnsureSuccessStatusCode();
+
+                var total = response.Content.Headers.ContentLength ?? -1;
+                var received = 0L;
+                var buffer = new byte[81920];
+
+                await using var source = await response.Content.ReadAsStreamAsync();
+                await using var target = File.Create(temp);
+
+                int read;
+                while ((read = await source.ReadAsync(buffer)) > 0)
                 {
-                    TotalTextBlock.Text = LocalizationHelper.GetWithFormat("S.Downloader.Size", "{0} of {1}", Humanizer.BytesToString(args.BytesReceived), Humanizer.BytesToString(args.TotalBytesToReceive));
-                    MainProgressBar.Value = args.ProgressPercentage;
+                    await target.WriteAsync(buffer.AsMemory(0, read));
+                    received += read;
+
+                    TotalTextBlock.Text = LocalizationHelper.GetWithFormat("S.Downloader.Size", "{0} of {1}", Humanizer.BytesToString(received), Humanizer.BytesToString(total));
+                    MainProgressBar.Value = total > 0 ? received * 100d / total : 0;
 
                     if (_cancel)
-                    {
-                        client.CancelAsync();
                         Environment.Exit(35);
-                    }
-                };
-
-                await client.DownloadFileTaskAsync(new Uri(downloadUrl), temp);
+                }
             }
 
             if (_cancel)

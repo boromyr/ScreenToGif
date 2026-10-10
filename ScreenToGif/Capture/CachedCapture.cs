@@ -141,7 +141,7 @@ internal class CachedCapture : ImageCapture
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //LogWriter.Log(e, "Impossible to get the cursor");
             }
@@ -161,7 +161,7 @@ internal class CachedCapture : ImageCapture
             if (IsAcceptingFrames)
                 BlockingCollection.Add(frame);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             //LogWriter.Log(ex, "Impossible to get the screenshot of the screen");
         }

@@ -213,7 +213,6 @@ public partial class NewRecorder
         try
         {
             _isExcludedFromCapture = this.ExcludeFromCapture();
-            TracePanel($"ExcludeFromCapture: {_isExcludedFromCapture} | error {System.Runtime.InteropServices.Marshal.GetLastWin32Error()} | hwnd {new System.Windows.Interop.WindowInteropHelper(this).Handle}");
         }
         catch (Exception ex)
         {
@@ -440,8 +439,6 @@ public partial class NewRecorder
         //Remember that the user placed the panel manually, so it's not moved back when the recording starts.
         if (Math.Abs(left - Left) > 1 || Math.Abs(top - Top) > 1)
             _panelPlacedForRegion = _viewModel.Region;
-
-        TracePanel($"Drag: {left:0.##},{top:0.##} -> {Left:0.##},{Top:0.##} | region {_viewModel.Region} | placed {_panelPlacedForRegion}");
     }
 
     private void RegionSelection_PositionChanged(object sender, RoutedEventArgs e)
@@ -868,7 +865,6 @@ public partial class NewRecorder
             MoveToClosestScreen();
 
             //The screens changed, so the custom position of the panel may not be valid anymore.
-            TracePanel($"UpdatePositioning reset: placed {_panelPlacedForRegion}{Environment.NewLine}{Environment.StackTrace}");
             _panelPlacedForRegion = null;
 
             #endregion
@@ -1782,9 +1778,6 @@ public partial class NewRecorder
             return;
 
         //The region changed, so the panel follows it again.
-        if (_panelPlacedForRegion != null)
-            TracePanel($"MoveCommandPanel reset: placed {_panelPlacedForRegion} | region {_viewModel.Region} | intersected {IsRegionIntersected()} | excluded {_isExcludedFromCapture}{Environment.NewLine}{Environment.StackTrace}");
-
         _panelPlacedForRegion = null;
 
         #region Calculate the available spaces for all four sides
@@ -1860,8 +1853,6 @@ public partial class NewRecorder
     /// </summary>
     private void SavePanelPosition()
     {
-        TracePanel($"Save: placedByUser {IsPanelPlacedByUser} | placed {_panelPlacedForRegion} | region {_viewModel?.Region} | pos {Left:0.##},{Top:0.##}");
-
         if (!IsPanelPlacedByUser)
         {
             UserSettings.All.RecorderPanelLeft = double.NaN;
@@ -1881,19 +1872,12 @@ public partial class NewRecorder
     /// <returns>True if the position was restored.</returns>
     private bool TryRestorePanelPosition()
     {
-        TracePanel($"Restore: remember {UserSettings.All.RecorderRememberPosition} | saved {UserSettings.All.RecorderPanelLeft},{UserSettings.All.RecorderPanelTop} on {UserSettings.All.RecorderPanelMonitor}");
-
         if (!UserSettings.All.RecorderRememberPosition || double.IsNaN(UserSettings.All.RecorderPanelLeft) || double.IsNaN(UserSettings.All.RecorderPanelTop))
             return false;
 
         var left = UserSettings.All.RecorderPanelLeft;
         var top = UserSettings.All.RecorderPanelTop;
         var monitor = _viewModel.Monitors.FirstOrDefault(f => f.Name == UserSettings.All.RecorderPanelMonitor);
-
-        foreach (var m in _viewModel.Monitors)
-            TracePanel($"  Monitor {m.Name} | bounds {m.Bounds} | native {m.NativeBounds} | scale {m.Scale}");
-
-        TracePanel($"  Found {monitor?.Name} | contains {monitor?.Bounds.Contains(new Point(left + 10, top + 10))}");
 
         //The monitor is gone or its layout changed, so the panel would be (partially) off-screen.
         if (monitor == null || !monitor.Bounds.Contains(new Point(left + 10, top + 10)))
@@ -1902,29 +1886,12 @@ public partial class NewRecorder
         MovePanelTo(monitor, left, top);
         _panelPlacedForRegion = _viewModel.Region;
 
-        TracePanel($"  Moved to {Left:0.##},{Top:0.##} | intersected {IsRegionIntersected()} | visible {IsVisible}");
-
         //If the panel overlaps the region, it's moved away only when the recording starts.
         return true;
     }
 
-    //TEMP: diagnostic trace for the panel position, to be removed.
-    private static void TracePanel(string message)
-    {
-        try
-        {
-            File.AppendAllText(Path.Combine(Path.GetTempPath(), "ScreenToGif-panel.log"), $"{DateTime.Now:HH:mm:ss.fff} {message}{Environment.NewLine}");
-        }
-        catch
-        {
-            //Ignore.
-        }
-    }
-
     private void MovePanelTo(Monitor monitor, double left, double top)
     {
-        TracePanel($"MovePanelTo {left:0.##},{top:0.##} on {monitor.Name}{Environment.NewLine}{Environment.StackTrace}");
-
         if (_viewModel.CurrentControlMonitor?.Handle != monitor.Handle || _viewModel.CurrentControlMonitor?.Scale != monitor.Scale)
         {
             //First move the command window to the final monitor, so that the UI scale can be adjusted.

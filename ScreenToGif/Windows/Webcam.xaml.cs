@@ -18,6 +18,9 @@ using ScreenToGif.Webcam.DirectX;
 using ScreenToGif.Windows.Other;
 using Timer = System.Windows.Forms.Timer;
 
+//RecorderStages.Snapping is obsolete, but the snapshot mode of the webcam recorder still depends on it.
+#pragma warning disable CS0612
+
 namespace ScreenToGif.Windows;
 
 public partial class Webcam

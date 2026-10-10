@@ -3,7 +3,6 @@ using ScreenToGif.Util.Settings;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
-using System.Net.Cache;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -44,95 +43,41 @@ public static class WebHelper
     }
 
 
-    public static async Task<string> Get(string url, NameValueCollection headers = null)
-    {
-        using (var webResponse = await GetResponse(HttpMethod.Get, url, headers))
-        {
-            await using (var responseStream = webResponse.GetResponseStream())
-            {
-                if (responseStream == null)
-                    return null;
+    private const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
 
-                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                    return await reader.ReadToEndAsync();
-            }
-        }
+    public static Task<string> Get(string url, NameValueCollection headers = null)
+    {
+        return Send(HttpMethod.Get, url, null, null, headers);
     }
 
     public static async Task<string> Post(string url, string content, NameValueCollection headers = null)
     {
-        using (var webResponse = await GetResponse(HttpMethod.Post, url, content, "application/json", headers))
-        {
-            await using (var responseStream = webResponse.GetResponseStream())
-            {
-                if (responseStream == null)
-                    return null;
+        await using var stream = new MemoryStream();
+        stream.WriteStringUtf8(content);
 
-                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                    return await reader.ReadToEndAsync();
-            }
-        }
+        return await Send(HttpMethod.Post, url, stream, "application/json", headers);
     }
 
     public static async Task<string> PostMultipart(string url, Dictionary<string, string> args)
     {
-        await using (var stream = new MemoryStream())
-        {
-            stream.WriteStringUtf8(GetMultipartString(Boundary, args));
+        await using var stream = new MemoryStream();
+        stream.WriteStringUtf8(GetMultipartString(Boundary, args));
 
-            using (var webResponse = await GetResponse(HttpMethod.Post, url, stream, "multipart/form-data; boundary=" + Boundary))
-            {
-                await using (var responseStream = webResponse.GetResponseStream())
-                {
-                    if (responseStream == null)
-                        return null;
-
-                    using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                        return await reader.ReadToEndAsync();
-                }
-            }
-        }
+        return await Send(HttpMethod.Post, url, stream, "multipart/form-data; boundary=" + Boundary);
     }
 
     public static async Task<string> SendFile(string url, Stream data, string filename, Dictionary<string, string> args = null, NameValueCollection headers = null, string streamName = "file")
     {
-        await using (var head = GetMultipartStream(Boundary, args, filename, data, streamName))
-        {
-            using (var webResponse = await GetResponse(HttpMethod.Post, url, head, "multipart/form-data; boundary=" + Boundary, headers))
-            {
-                await using (var responseStream = webResponse.GetResponseStream())
-                {
-                    if (responseStream == null)
-                        return null;
+        await using var head = GetMultipartStream(Boundary, args, filename, data, streamName);
 
-                    using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                        return await reader.ReadToEndAsync();
-                }
-            }
-        }
+        return await Send(HttpMethod.Post, url, head, "multipart/form-data; boundary=" + Boundary, headers);
     }
 
     public static async Task<string> SendFile2(string url, Stream data, string filename, Dictionary<string, string> args = null, NameValueCollection headers = null)
     {
-        await using (var head = GetMultipartStream(Boundary, args, filename, data))
-        {
-            var request = GetWebRequest(HttpMethod.Post, url, headers, "multipart/form-data; boundary=" + Boundary, head.Length);
+        await using var head = GetMultipartStream(Boundary, args, filename, data);
 
-            await using (var requestStream = await request.GetRequestStreamAsync())
-                requestStream.WriteStream(head);
-
-            using (var response = await request.GetResponseAsync())
-            {
-                await using (var responseStream = response.GetResponseStream())
-                {
-                    if (responseStream == null)
-                        return null;
-
-                    using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                        return await reader.ReadToEndAsync();
-                }
-            }
-        }
+        return await Send(HttpMethod.Post, url, head, "multipart/form-data; boundary=" + Boundary, headers);
     }
 
     public static Stream GetMultipartStream(string border, Dictionary<string, string> args, string filename, Stream data, string streamName = "file")
@@ -163,80 +108,42 @@ public static class WebHelper
             .Aggregate("", (p, n) => p + $"--{border}\r\nContent-Disposition: form-data; name=\"{n.Key}\"\r\n\r\n{n.Value}\r\n") + $"--{border}--\r\n";
     }
 
-
-    public static Task<WebResponse> GetResponse(HttpMethod method, string url, NameValueCollection headers = null)
+    /// <summary>
+    /// Sends the request and returns the body of the response, even for unsuccessful status codes (the APIs return the error details in it).
+    /// </summary>
+    private static async Task<string> Send(HttpMethod method, string url, Stream data, string contentType = null, NameValueCollection headers = null)
     {
-        try
+        var proxy = GetProxy();
+        using var handler = new HttpClientHandler { Proxy = proxy, UseProxy = proxy != null };
+        using var client = new HttpClient(handler);
+
+        using var request = new HttpRequestMessage(method, url);
+        request.Headers.TryAddWithoutValidation("User-Agent", UserAgent);
+
+        if (headers != null)
+            foreach (string key in headers)
+                request.Headers.TryAddWithoutValidation(key, headers[key]);
+
+        if (data is { Length: > 0 })
         {
-            return GetWebRequest(method, url, headers).GetResponseAsync();
+            data.Position = 0;
+            request.Content = new StreamContent(data);
+            request.Content.Headers.ContentLength = data.Length;
+
+            if (contentType != null)
+                request.Content.Headers.TryAddWithoutValidation("Content-Type", contentType);
+
+            //Uploads can take a while.
+            client.Timeout = Timeout.InfiniteTimeSpan;
         }
-        catch (WebException we)
+        else
         {
-            if (we.Response is not WebResponse resp)
-                throw;
-
-            return Task.FromResult(resp);
-        }
-        catch (Exception ex)
-        {
-            LogWriter.Log(ex, "Get response: " + url);
-        }
-
-        return null;
-    }
-
-    private static Task<WebResponse> GetResponse(HttpMethod method, string url, string content, string contentType = null, NameValueCollection headers = null)
-    {
-        try
-        {
-            var request = GetWebRequest(method, url, headers, contentType, content.Length);
-
-            if (content.Length > 0)
-                using (var requestStream = request.GetRequestStream())
-                    requestStream.WriteStringUtf8(content);
-
-            return request.GetResponseAsync();
-        }
-        catch (WebException we)
-        {
-            if (we.Response is not WebResponse resp)
-                throw;
-
-            return Task.FromResult(resp);
-        }
-        catch (Exception ex)
-        {
-            LogWriter.Log(ex, "Get response: " + url);
+            request.Headers.ConnectionClose = true;
         }
 
-        return Task.FromResult<WebResponse>(null);
-    }
+        using var response = await client.SendAsync(request);
 
-    private static async Task<WebResponse> GetResponse(HttpMethod method, string url, Stream data, string contentType = null, NameValueCollection headers = null)
-    {
-        try
-        {
-            var request = GetWebRequest(method, url, headers, contentType, data?.Length ?? 0);
-                
-            if (request.ContentLength > 0)
-                await using (var requestStream = await request.GetRequestStreamAsync())
-                    requestStream.WriteStream(data);
-
-            return await request.GetResponseAsync();
-        }
-        catch (WebException we)
-        {
-            if (we.Response is not WebResponse resp)
-                throw;
-
-            return resp;
-        }
-        catch (Exception ex)
-        {
-            LogWriter.Log(ex, "Get response: " + url);
-        }
-
-        return null;
+        return await response.Content.ReadAsStringAsync();
     }
 
     public static async Task<Stream> GetStream(string url, NameValueCollection headers = null)
@@ -248,35 +155,6 @@ public static class WebHelper
             throw new Exception("Unsuccessful download of stream.");
 
         return await response.Content.ReadAsStreamAsync();
-    }
-
-
-    private static HttpWebRequest GetWebRequest(HttpMethod method, string url, NameValueCollection headers = null, string contentType = null, long contentLength = 0)
-    {
-        var request = (HttpWebRequest) WebRequest.Create(url);
-
-        if (headers != null)
-            request.Headers.Add(headers);
-
-        request.Method = method.ToString();
-        request.Proxy = GetProxy();
-        request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
-        request.ContentType = contentType;
-
-        if (contentLength == 0)
-        {
-            request.KeepAlive = false;
-            return request;
-        }
-
-        if (method == HttpMethod.Get)
-            request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-
-        request.AllowWriteStreamBuffering = IsProxyBeingUsed();
-        request.ContentLength = contentLength;
-        request.Pipelined = false;
-        request.Timeout = -1;
-        return request;
     }
 
     internal static HttpClient GetHttpClient(NameValueCollection headers = null)

@@ -11,7 +11,7 @@ public static class ProcessHelper
         try
         {
             return Process.GetCurrentProcess().MainModule?.FileName ??
-                System.Reflection.Assembly.GetEntryAssembly()?.GetName().CodeBase?.Replace("/ScreenToGif.dll", "/ScreenToGif.exe") ??
+                Environment.ProcessPath ??
                 Path.Combine(AppContext.BaseDirectory, "ScreenToGif.exe");
         }
         catch (Exception e)

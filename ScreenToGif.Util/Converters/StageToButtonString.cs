@@ -19,7 +19,9 @@ public class StageToButtonString : IValueConverter
                 return LocalizationHelper.Get("S.Recorder.Pause");
             case RecorderStages.Paused:
                 return LocalizationHelper.Get("S.Recorder.Continue");
+#pragma warning disable CS0612 //Snapping is obsolete, but still used by the webcam recorder.
             case RecorderStages.Snapping:
+#pragma warning restore CS0612
                 return LocalizationHelper.Get("S.Recorder.Snap");
         }
 

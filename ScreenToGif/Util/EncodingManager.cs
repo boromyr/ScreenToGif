@@ -1422,7 +1422,8 @@ internal class EncodingManager
             concat.AppendLine("duration " + (frame.Delay / 1000d).ToString(CultureInfo.InvariantCulture));
         }
 
-        if (preset.Type is not ExportFormats.Gif or ExportFormats.Apng or ExportFormats.Webp or ExportFormats.Avif)
+        //The original pattern ('is not Gif or Apng or Webp or Avif') only ever excluded Gif, this keeps the same behavior.
+        if (preset.Type is not ExportFormats.Gif)
         {
             //Fix for last frame.
             concat.AppendLine("file '" + listFrames.LastOrDefault()?.Path + "'");
@@ -1798,7 +1799,9 @@ internal class EncodingManager
 
             Update(id, 0, LocalizationHelper.Get("S.Encoder.Analyzing"));
 
-            while (!pro.StandardError.EndOfStream)
+            string line;
+
+            while ((line = await pro.StandardError.ReadLineAsync()) != null)
             {
                 if (tokenSource.IsCancellationRequested)
                 {
@@ -1806,7 +1809,6 @@ internal class EncodingManager
                     return;
                 }
 
-                var line = pro.StandardError.ReadLine() ?? "";
                 log += Environment.NewLine + line;
 
                 var split = line.Split([' '], StringSplitOptions.RemoveEmptyEntries);

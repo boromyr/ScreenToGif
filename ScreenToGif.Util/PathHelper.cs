@@ -165,7 +165,7 @@ public static class PathHelper
                 if (!File.Exists(Path.Combine(path, "gifski.dll")))
                     continue;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //LogWriter.Log(ex, "Checking the path variables", path);
                 continue;

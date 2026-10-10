@@ -5556,6 +5556,9 @@ namespace ScreenToGif.Windows
 
             var total = Project.Frames.Sum(y => y.Delay);
             var thickness = model.Thickness * ZoomBoxControl.ScaleDiff;
+
+            //System DPI (a visual not attached to a window), the same value the obsolete FormattedText constructor used.
+            var pixelsPerDip = VisualTreeHelper.GetDpi(new DrawingVisual()).PixelsPerDip;
             var fontSize = model.FontSize * ZoomBoxControl.ScaleDiff;
 
             var count = 1;
@@ -5618,7 +5621,7 @@ namespace ScreenToGif.Windows
                         var text = GetProgressText(model.Precision, model.ShowTotal, model.Format, model.DateFormat, model.StartNumber, cumulative, total, count); //FrameListView.SelectedIndex
                         var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
                             new Typeface(model.FontFamily, model.FontStyle, model.FontWeight, default), fontSize, new SolidColorBrush(model.FontColor),
-                            null, TextFormattingMode.Ideal);
+                            null, TextFormattingMode.Ideal, pixelsPerDip);
 
                         var width = formatted.Width + 4; //2px padding for both sides.
                         var height = formatted.Height;
@@ -5734,6 +5737,9 @@ namespace ScreenToGif.Windows
             ShowProgress(LocalizationHelper.Get("S.Editor.ApplyingOverlay"), Project.Frames.Count);
 
             var auxList = Project.Frames.CopyList();
+
+            //System DPI (a visual not attached to a window), the same value the obsolete FormattedText constructor used.
+            var pixelsPerDip = VisualTreeHelper.GetDpi(new DrawingVisual()).PixelsPerDip;
 
             #region Make the keystrokes start earlier
 
@@ -5910,7 +5916,7 @@ namespace ScreenToGif.Windows
                     //The FormattedText class helps in transforming the text to a shape.
                     var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
                         new Typeface(model.KeyStrokesFontFamily, model.KeyStrokesFontStyle, model.KeyStrokesFontWeight, default), model.KeyStrokesFontSize,
-                        new SolidColorBrush(model.KeyStrokesFontColor), null, TextFormattingMode.Ideal)
+                        new SolidColorBrush(model.KeyStrokesFontColor), null, TextFormattingMode.Ideal, pixelsPerDip)
                     {
                         MaxTextWidth = image.Width - (model.KeyStrokesPadding + model.KeyStrokesMargin) * 2,
                         MaxTextHeight = image.Height - (model.KeyStrokesPadding + model.KeyStrokesMargin) * 2,

@@ -134,7 +134,7 @@ public sealed class GifEncoder : IDisposable
         sourceGif.Position = SourceColorBlockPosition; // Locating the image color table
         var colorTable = new byte[SourceColorBlockLength];
 
-        sourceGif.Read(colorTable, 0, colorTable.Length);
+        sourceGif.ReadExactly(colorTable, 0, colorTable.Length);
         _stream.Write(colorTable, 0, colorTable.Length);
     }
 
@@ -142,7 +142,7 @@ public sealed class GifEncoder : IDisposable
     {
         sourceGif.Position = SourceGraphicControlExtensionPosition; // Locating the source GCE
         var blockhead = new byte[SourceGraphicControlExtensionLength];
-        sourceGif.Read(blockhead, 0, blockhead.Length); // Reading source GCE
+        sourceGif.ReadExactly(blockhead, 0, blockhead.Length); // Reading source GCE
 
         WriteShort(GraphicControlExtensionBlockIdentifier); // Identifier
         WriteByte(GraphicControlExtensionBlockSize); // Block Size
@@ -156,7 +156,7 @@ public sealed class GifEncoder : IDisposable
     {
         sourceGif.Position = SourceImageBlockPosition; // Locating the image block
         var header = new byte[SourceImageBlockHeaderLength];
-        sourceGif.Read(header, 0, header.Length);
+        sourceGif.ReadExactly(header, 0, header.Length);
 
         WriteByte(header[0]); // Separator
         WriteShort(x); // Position X
@@ -184,7 +184,7 @@ public sealed class GifEncoder : IDisposable
         while (dataLength > 0)
         {
             var imgData = new byte[dataLength];
-            sourceGif.Read(imgData, 0, dataLength);
+            sourceGif.ReadExactly(imgData, 0, dataLength);
 
             _stream.WriteByte(Convert.ToByte(dataLength));
             _stream.Write(imgData, 0, dataLength);

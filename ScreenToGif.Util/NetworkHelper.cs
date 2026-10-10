@@ -22,7 +22,7 @@ public static class NetworkHelper
         /// An <see cref="SocketAddress"/> structure containing the destination IPv4/IPv6 address. If NULL, this method will instead return the cost associated with the
         /// preferred connection used for machine Internet connectivity.
         /// </param>
-        void GetCost(out ConnectionCost cost, [In, Optional] SocketAddress? destinationAddress);
+        void GetCost(out ConnectionCost cost, [In, Optional] SocketAddress destinationAddress);
     }
 
     private enum ConnectionCost : uint

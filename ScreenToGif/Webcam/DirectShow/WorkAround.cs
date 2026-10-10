@@ -48,7 +48,7 @@ public class Workaround
             Marshal.ThrowExceptionForHR(hr);
 
         var iu = new Guid("00000000-0000-0000-C000-000000000046");
-        hr = Marshal.QueryInterface(ptrIf, ref iu, out _);
+        hr = Marshal.QueryInterface(ptrIf, in iu, out _);
 
         var ooo = InternalWrapIUnknownWithComObject(ptrIf); //System.Runtime.Remoting.Services.EnterpriseServicesHelper.WrapIUnknownWithComObject(ptrIf);
         var ct = Marshal.Release(ptrIf);

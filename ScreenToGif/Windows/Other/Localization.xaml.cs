@@ -397,66 +397,6 @@ public partial class Localization
                 "yo-BJ;zgh;zh;zh-Hans-HK;zh-Hans-MO;zh-Hant;zu").Split(';').ToList();
     }
 
-    private async Task<IEnumerable<string>> GetLanguageCodesAsync()
-    {
-        var path = await GetLanguageCodesPathAsync();
-
-        if (string.IsNullOrEmpty(path))
-            throw new WebException("Can't get language codes. Path to language codes is null");
-
-        var request = (HttpWebRequest)WebRequest.Create(path);
-        request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
-        request.Proxy = WebHelper.GetProxy();
-
-        var response = (HttpWebResponse)await request.GetResponseAsync();
-
-        using (var resultStream = response.GetResponseStream())
-        {
-            if (resultStream == null)
-                throw new WebException("Empty response from server when getting language codes");
-
-            using (var reader = new StreamReader(resultStream))
-            {
-                var result = await reader.ReadToEndAsync();
-
-                var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(result),
-                    new System.Xml.XmlDictionaryReaderQuotas());
-
-                var json = await Task<XElement>.Factory.StartNew(() => XElement.Load(jsonReader));
-                var languages = json.Elements();
-
-                return await Task.Factory.StartNew(() => languages.Where(x => x.XPathSelectElement("defs")?.Value != "0").Select(x => x.XPathSelectElement("lang")?.Value));
-            }
-        }
-    }
-
-    private async Task<string> GetLanguageCodesPathAsync()
-    {
-        var request = (HttpWebRequest)WebRequest.Create("https://datahub.io/core/language-codes/datapackage.json");
-        request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393";
-        request.Proxy = WebHelper.GetProxy();
-
-        var response = (HttpWebResponse)await request.GetResponseAsync();
-
-        using (var resultStream = response.GetResponseStream())
-        {
-            if (resultStream == null)
-                throw new WebException("Empty response from server when getting language codes path");
-
-            using (var reader = new StreamReader(resultStream))
-            {
-                var result = await reader.ReadToEndAsync();
-
-                var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(result),
-                    new System.Xml.XmlDictionaryReaderQuotas());
-
-                var json = await Task<XElement>.Factory.StartNew(() => XElement.Load(jsonReader));
-
-                return await Task.Factory.StartNew(() => json.XPathSelectElement("resources")?.Elements().First(x => x.XPathSelectElement("name")?.Value == "ietf-language-tags_json").XPathSelectElement("path")?.Value);
-            }
-        }
-    }
-
     private void UpdateIndexes()
     {
         var actualIndex = 0;

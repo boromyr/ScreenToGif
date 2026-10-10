@@ -30,7 +30,7 @@ public static class FunctionLoader
         return (T)Marshal.GetDelegateForFunctionPointer(functionAddress, typeof(T));
     }
 
-    public static T? TryLoadFunction<T>(string dllPath, string functionName) where T : Delegate
+    public static T TryLoadFunction<T>(string dllPath, string functionName) where T : Delegate
     {
         if (!LoadedLibraries.TryGetValue(dllPath, out var moduleHandle))
         {

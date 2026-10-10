@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // Se i framework di destinazione sono stati modificati, assicurarsi di aggiornare il percorso del programma.
-            "program": "${workspaceFolder}/ScreenToGif/bin/Debug/net9.0-windows7.0/ScreenToGif.dll",
+            "program": "${workspaceFolder}/ScreenToGif/bin/Debug/net10.0-windows7.0/ScreenToGif.dll",
             "args": [],
             "cwd": "${workspaceFolder}/ScreenToGif",
             // Per ulteriori informazioni sul campo 'console', vedere https://aka.ms/VSCode-CS-LaunchJson-Console

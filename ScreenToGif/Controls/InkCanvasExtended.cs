@@ -14,7 +14,7 @@ public class InkCanvasExtended : InkCanvas
     /// <summary>
     /// Gets or set the eraser shape
     /// </summary>
-    public new StylusShape EraserShapeDependency
+    public StylusShape EraserShapeDependency
     {
         get => (StylusShape) GetValue(EraserShapeProperty);
         set => SetValue(EraserShapeProperty, value);

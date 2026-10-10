@@ -60,7 +60,6 @@ public partial class App : IDisposable
         BaseCompatibilityPreferences.HandleDispatcherRequestProcessingFailure = BaseCompatibilityPreferences.HandleDispatcherRequestProcessingFailureOptions.Continue;
 #endif
 
-        SetSecurityProtocol();
 
         //Parse arguments.
         Arguments.Prepare(e.Args);
@@ -353,19 +352,6 @@ public partial class App : IDisposable
     #endregion
 
     #region Methods
-
-    private void SetSecurityProtocol()
-    {
-        try
-        {
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
-        }
-        catch (Exception ex)
-        {
-            LogWriter.Log(ex, "Impossible to set the network properties");
-        }
-    }
 
     private void SetWorkaroundForDispatcher()
     {
