@@ -38,6 +38,8 @@ public class HideableTabControl : TabControl
 
     public static DependencyProperty HelpCommandProperty = DependencyProperty.Register("HelpCommand", typeof(ICommand), typeof(HideableTabControl), new PropertyMetadata(null));
 
+    public static DependencyProperty ExportCommandProperty = DependencyProperty.Register("ExportCommand", typeof(ICommand), typeof(HideableTabControl), new PropertyMetadata(null));
+
     #endregion
 
     #region Properties
@@ -64,6 +66,12 @@ public class HideableTabControl : TabControl
     {
         get => (ICommand)GetValue(HelpCommandProperty);
         set => SetValue(HelpCommandProperty, value);
+    }
+
+    public ICommand ExportCommand
+    {
+        get => (ICommand)GetValue(ExportCommandProperty);
+        set => SetValue(ExportCommandProperty, value);
     }
 
     #endregion
@@ -165,8 +173,8 @@ public class HideableTabControl : TabControl
         visibilityAnimation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Visible, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.5))));
         _hideButton.BeginAnimation(VisibilityProperty, visibilityAnimation);
 
-        //Margin = 5,5,0,-1
-        var marginAnimation = new ThicknessAnimation(_tabPanel.Margin, new Thickness(5, 5, 0, -1), new Duration(new TimeSpan(0, 0, 0, 0, 1)))
+        //Margin = 8,2,0,4
+        var marginAnimation = new ThicknessAnimation(_tabPanel.Margin, new Thickness(8, 2, 0, 4), new Duration(new TimeSpan(0, 0, 0, 0, 1)))
         {
             EasingFunction = new PowerEase { Power = 8 }
         };
@@ -199,8 +207,8 @@ public class HideableTabControl : TabControl
         visibilityAnimation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Collapsed, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))));
         _hideButton.BeginAnimation(VisibilityProperty, visibilityAnimation);
 
-        //Margin = 5,5,0,5
-        var marginAnimation = new ThicknessAnimation(_tabPanel.Margin, new Thickness(5, 5, 0, 5), new Duration(new TimeSpan(0, 0, 0, 0, 1)))
+        //Margin = 8,2,0,4
+        var marginAnimation = new ThicknessAnimation(_tabPanel.Margin, new Thickness(8, 2, 0, 4), new Duration(new TimeSpan(0, 0, 0, 0, 1)))
         {
             EasingFunction = new PowerEase { Power = 8 }
         };

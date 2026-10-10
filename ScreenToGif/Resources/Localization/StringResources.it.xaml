@@ -986,6 +986,7 @@
     
     <!--Editor • File tab • Save/Discard-->
     <s:String x:Key="S.Editor.File.Save">Salva&#x0a;con nome...</s:String>
+    <s:String x:Key="S.Editor.Export">Esporta</s:String>
     <s:String x:Key="S.Editor.File.Load">Carica</s:String>
     <s:String x:Key="S.Editor.File.LoadRecent">Progetti&#x0a;recenti</s:String>
     <s:String x:Key="S.Editor.File.SaveProject">Salva come&#x0a;progetto</s:String>

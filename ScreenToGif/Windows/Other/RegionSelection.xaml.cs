@@ -92,6 +92,21 @@ public partial class RegionSelection : Window
         RenderOptions.SetEdgeMode(SelectionRectangle, EdgeMode.Unspecified);
     }
 
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        //The dashed border and the handles must never end up in the recording, even with rounding errors on fractional DPI scales.
+        try
+        {
+            this.ExcludeFromCapture();
+        }
+        catch (Exception ex)
+        {
+            LogWriter.Log(ex, "Impossible to exclude the region selection window from capture.");
+        }
+    }
+
 
     private void Window_DpiChanged(object sender, DpiChangedEventArgs e)
     {

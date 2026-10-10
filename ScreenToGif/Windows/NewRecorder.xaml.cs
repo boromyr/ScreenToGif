@@ -60,6 +60,25 @@ public partial class NewRecorder
     private int _preStartCount = 1;
 
     /// <summary>
+    /// True if the capture controls are excluded from screen captures by the OS.
+    /// </summary>
+    private bool _isExcludedFromCapture;
+
+    /// <summary>
+    /// The capture region at the moment the user placed the capture controls in a custom position (null if never placed).
+    /// The custom position is kept as long as the region stays the same.
+    /// </summary>
+    private Rect? _panelPlacedForRegion;
+
+    /// <summary>
+    /// True if the capture controls are in a position chosen by the user and the region was not changed since then.
+    /// The comparison has a small tolerance, since the region gets recalculated with rounding on fractional DPI scales.
+    /// </summary>
+    private bool IsPanelPlacedByUser => _panelPlacedForRegion is { } placed && _viewModel != null && !_viewModel.Region.IsEmpty == !placed.IsEmpty &&
+        (placed.IsEmpty || (Math.Abs(placed.Left - _viewModel.Region.Left) <= 2 && Math.Abs(placed.Top - _viewModel.Region.Top) <= 2 &&
+        Math.Abs(placed.Width - _viewModel.Region.Width) <= 2 && Math.Abs(placed.Height - _viewModel.Region.Height) <= 2));
+
+    /// <summary>
     /// True while the recording is being exported as a gif, when the window is kept hidden until the encoding ends.
     /// </summary>
     private bool _isQuickExporting;
@@ -183,6 +202,24 @@ public partial class NewRecorder
         SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
     }
 
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        //Windows 11 rounded corners and dark frame.
+        ThemeHelper.ApplyWindowChrome(this);
+
+        //Keeps the capture controls out of the recording (WDA_EXCLUDEFROMCAPTURE, Windows 10 2004+).
+        try
+        {
+            _isExcludedFromCapture = this.ExcludeFromCapture();
+            TracePanel($"ExcludeFromCapture: {_isExcludedFromCapture} | error {System.Runtime.InteropServices.Marshal.GetLastWin32Error()} | hwnd {new System.Windows.Interop.WindowInteropHelper(this).Handle}");
+        }
+        catch (Exception ex)
+        {
+            LogWriter.Log(ex, "Impossible to exclude the recorder window from capture.");
+        }
+    }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -392,8 +429,19 @@ public partial class NewRecorder
 
     private void HeaderGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (Mouse.LeftButton == MouseButtonState.Pressed)
-            DragMove();
+        if (Mouse.LeftButton != MouseButtonState.Pressed)
+            return;
+
+        var left = Left;
+        var top = Top;
+
+        DragMove();
+
+        //Remember that the user placed the panel manually, so it's not moved back when the recording starts.
+        if (Math.Abs(left - Left) > 1 || Math.Abs(top - Top) > 1)
+            _panelPlacedForRegion = _viewModel.Region;
+
+        TracePanel($"Drag: {left:0.##},{top:0.##} -> {Left:0.##},{Top:0.##} | region {_viewModel.Region} | placed {_panelPlacedForRegion}");
     }
 
     private void RegionSelection_PositionChanged(object sender, RoutedEventArgs e)
@@ -500,6 +548,7 @@ public partial class NewRecorder
         //Save Settings
         UserSettings.All.SelectedRegion = _viewModel?.Region ?? UserSettings.All.SelectedRegion;
         UserSettings.All.SelectedRegionScale = _viewModel?.CurrentMonitor?.Scale ?? UserSettings.All.SelectedRegionScale;
+        SavePanelPosition();
         UserSettings.Save();
 
         #region Remove Hooks
@@ -818,6 +867,10 @@ public partial class NewRecorder
             //Move region to the closest available screen.
             MoveToClosestScreen();
 
+            //The screens changed, so the custom position of the panel may not be valid anymore.
+            TracePanel($"UpdatePositioning reset: placed {_panelPlacedForRegion}{Environment.NewLine}{Environment.StackTrace}");
+            _panelPlacedForRegion = null;
+
             #endregion
         }
         else
@@ -898,7 +951,12 @@ public partial class NewRecorder
 
         #region Adjust the position of the main controls
 
-        if (_viewModel.Region.IsEmpty)
+        if (startup && TryRestorePanelPosition())
+        {
+            if (!_viewModel.Region.IsEmpty)
+                DisplaySelection((ModeType) UserSettings.All.RecorderModeIndex);
+        }
+        else if (_viewModel.Region.IsEmpty)
         {
             #region Center on screen
 
@@ -1718,6 +1776,17 @@ public partial class NewRecorder
         if (_viewModel.Region.Width < 25 || _viewModel.Region.Height < 25)
             return;
 
+        //Keep the position chosen by the user while the region stays the same.
+        //When starting/resuming the recording (ignoreCenter), it's only kept if it won't end up in the capture.
+        if (IsPanelPlacedByUser && (!ignoreCenter || !IsRegionIntersected()))
+            return;
+
+        //The region changed, so the panel follows it again.
+        if (_panelPlacedForRegion != null)
+            TracePanel($"MoveCommandPanel reset: placed {_panelPlacedForRegion} | region {_viewModel.Region} | intersected {IsRegionIntersected()} | excluded {_isExcludedFromCapture}{Environment.NewLine}{Environment.StackTrace}");
+
+        _panelPlacedForRegion = null;
+
         #region Calculate the available spaces for all four sides
 
         //If the selected region is passing the bottom edge of the display, it means that there are no space available on the bottom.
@@ -1786,8 +1855,76 @@ public partial class NewRecorder
         MovePanelTo(_viewModel.CurrentMonitor, _viewModel.Region.Left + _viewModel.Region.Width / 2 - ActualWidth / 2, _viewModel.Region.Top + _viewModel.Region.Height / 2 - ActualHeight / 2);
     }
 
+    /// <summary>
+    /// Stores the position of the capture controls, only if they were placed by the user.
+    /// </summary>
+    private void SavePanelPosition()
+    {
+        TracePanel($"Save: placedByUser {IsPanelPlacedByUser} | placed {_panelPlacedForRegion} | region {_viewModel?.Region} | pos {Left:0.##},{Top:0.##}");
+
+        if (!IsPanelPlacedByUser)
+        {
+            UserSettings.All.RecorderPanelLeft = double.NaN;
+            UserSettings.All.RecorderPanelTop = double.NaN;
+            UserSettings.All.RecorderPanelMonitor = null;
+            return;
+        }
+
+        UserSettings.All.RecorderPanelLeft = Left;
+        UserSettings.All.RecorderPanelTop = Top;
+        UserSettings.All.RecorderPanelMonitor = Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(this).Handle).DeviceName;
+    }
+
+    /// <summary>
+    /// Moves the capture controls back to the position where the user left them, if it's still valid.
+    /// </summary>
+    /// <returns>True if the position was restored.</returns>
+    private bool TryRestorePanelPosition()
+    {
+        TracePanel($"Restore: remember {UserSettings.All.RecorderRememberPosition} | saved {UserSettings.All.RecorderPanelLeft},{UserSettings.All.RecorderPanelTop} on {UserSettings.All.RecorderPanelMonitor}");
+
+        if (!UserSettings.All.RecorderRememberPosition || double.IsNaN(UserSettings.All.RecorderPanelLeft) || double.IsNaN(UserSettings.All.RecorderPanelTop))
+            return false;
+
+        var left = UserSettings.All.RecorderPanelLeft;
+        var top = UserSettings.All.RecorderPanelTop;
+        var monitor = _viewModel.Monitors.FirstOrDefault(f => f.Name == UserSettings.All.RecorderPanelMonitor);
+
+        foreach (var m in _viewModel.Monitors)
+            TracePanel($"  Monitor {m.Name} | bounds {m.Bounds} | native {m.NativeBounds} | scale {m.Scale}");
+
+        TracePanel($"  Found {monitor?.Name} | contains {monitor?.Bounds.Contains(new Point(left + 10, top + 10))}");
+
+        //The monitor is gone or its layout changed, so the panel would be (partially) off-screen.
+        if (monitor == null || !monitor.Bounds.Contains(new Point(left + 10, top + 10)))
+            return false;
+
+        MovePanelTo(monitor, left, top);
+        _panelPlacedForRegion = _viewModel.Region;
+
+        TracePanel($"  Moved to {Left:0.##},{Top:0.##} | intersected {IsRegionIntersected()} | visible {IsVisible}");
+
+        //If the panel overlaps the region, it's moved away only when the recording starts.
+        return true;
+    }
+
+    //TEMP: diagnostic trace for the panel position, to be removed.
+    private static void TracePanel(string message)
+    {
+        try
+        {
+            File.AppendAllText(Path.Combine(Path.GetTempPath(), "ScreenToGif-panel.log"), $"{DateTime.Now:HH:mm:ss.fff} {message}{Environment.NewLine}");
+        }
+        catch
+        {
+            //Ignore.
+        }
+    }
+
     private void MovePanelTo(Monitor monitor, double left, double top)
     {
+        TracePanel($"MovePanelTo {left:0.##},{top:0.##} on {monitor.Name}{Environment.NewLine}{Environment.StackTrace}");
+
         if (_viewModel.CurrentControlMonitor?.Handle != monitor.Handle || _viewModel.CurrentControlMonitor?.Scale != monitor.Scale)
         {
             //First move the command window to the final monitor, so that the UI scale can be adjusted.
@@ -1843,11 +1980,12 @@ public partial class NewRecorder
 
     /// <summary>
     /// True if the capture controls are intersecting with the capture region.
+    /// Always false when the controls are excluded from capture, since they won't appear in the recording.
     /// </summary>
     /// <returns></returns>
     private bool IsRegionIntersected()
     {
-        return IsVisible && CaptureRegion.IntersectsWith(new Rect(Left, Top, Width, Height).Scale(_regionSelection.Scale));
+        return !_isExcludedFromCapture && IsVisible &&CaptureRegion.IntersectsWith(new Rect(Left, Top, Width, Height).Scale(_regionSelection.Scale));
     }
 
     private void Follow()

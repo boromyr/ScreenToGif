@@ -1341,8 +1341,8 @@ namespace ScreenToGif.Windows
             var borderWidth = ActualWidth - MainGrid.ActualWidth;
 
             //Bug: I need to take into consideration that the RibbonTabControl.ActualHeight can change, because the tab headers can occupy 2 rows.
-            var width = (size.Width * ZoomBoxControl.Zoom / ZoomBoxControl.ScaleDiff + 60) + borderWidth;
-            var height = (size.Height * ZoomBoxControl.Zoom / ZoomBoxControl.ScaleDiff + (RibbonTabControl.ActualHeight + FrameListView.ActualHeight + LowerGrid.ActualHeight)) + borderHeight;
+            var width = (size.Width * ZoomBoxControl.Zoom / ZoomBoxControl.ScaleDiff + 60 + MiddleGrid.Margin.Left + MiddleGrid.Margin.Right) + borderWidth;
+            var height = (size.Height * ZoomBoxControl.Zoom / ZoomBoxControl.ScaleDiff + (RibbonTabControl.ActualHeight + FrameListBorder.ActualHeight + FrameListBorder.Margin.Top + FrameListBorder.Margin.Bottom + MiddleGrid.Margin.Top + MiddleGrid.Margin.Bottom + LowerGrid.ActualHeight)) + borderHeight;
 
             //If image is too small, size to the minimum size.
             if (width < 770)

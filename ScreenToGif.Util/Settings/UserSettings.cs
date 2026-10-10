@@ -583,6 +583,30 @@ public class UserSettings : INotifyPropertyChanged
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// Position of the capture controls of the screen recorder, when placed by the user (NaN otherwise).
+    /// </summary>
+    public double RecorderPanelLeft
+    {
+        get => (double)GetValue();
+        set => SetValue(value);
+    }
+
+    public double RecorderPanelTop
+    {
+        get => (double)GetValue();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// Device name of the monitor where the capture controls were placed.
+    /// </summary>
+    public string RecorderPanelMonitor
+    {
+        get => (string)GetValue();
+        set => SetValue(value);
+    }
+
     public int RecorderWidth
     {
         get => (int)GetValue();

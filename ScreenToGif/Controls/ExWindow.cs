@@ -93,6 +93,9 @@ public class ExWindow : Window
         base.OnSourceInitialized(e);
 
         this.GetHwndSource()?.AddHook(Window_Hook);
+
+        //Windows 11 rounded corners and dark frame.
+        ThemeHelper.ApplyWindowChrome(this);
     }
 
     public override void OnApplyTemplate()
@@ -144,7 +147,7 @@ public class ExWindow : Window
 
                 if (button.HitTestElement(x, y))
                 {
-                    button.SetCurrentValue(BackgroundProperty, FindResource("Element.Background.Hover"));
+                    button.SetCurrentValue(BackgroundProperty, FindResource("Fluent.Subtle.Hover"));
 
                     handled = true;
                     return (nint)HitTestTargets.MaximizeButton; //new nint((int)HitTestTargets.MaximizeButton);
@@ -168,7 +171,7 @@ public class ExWindow : Window
 
                 if (button.HitTestElement(x, y))
                 {
-                    button.SetCurrentValue(BackgroundProperty, FindResource("Element.Background.Pressed"));
+                    button.SetCurrentValue(BackgroundProperty, FindResource("Fluent.Subtle.Pressed"));
 
                     //Without this, the button click near the bottom border would not work and it would display a ghost button nearby.
                     handled = true;
@@ -192,7 +195,7 @@ public class ExWindow : Window
 
                 if (button.HitTestElement(x, y))
                 {
-                    button.SetCurrentValue(BackgroundProperty, FindResource("Element.Background.Pressed"));
+                    button.SetCurrentValue(BackgroundProperty, FindResource("Fluent.Subtle.Pressed"));
 
                     //Without this, the button click near the bottom border would not work and it would display a ghost button nearby.
                     button.Command.Execute(null);

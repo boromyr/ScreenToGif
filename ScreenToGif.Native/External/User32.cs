@@ -25,6 +25,14 @@ namespace ScreenToGif.Native.External
         public static extern bool SetCursorPos(int x, int y);
 
         /// <summary>
+        /// Specifies where the content of the window can be displayed.
+        /// WDA_EXCLUDEFROMCAPTURE (0x11) removes the window from screen captures (Windows 10 2004+).
+        /// </summary>
+        [DllImport(Constants.User32, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
+
+        /// <summary>
         /// Gets the screen coordinates of the current mouse position.
         /// </summary>
         [DllImport(Constants.User32, SetLastError = true)]

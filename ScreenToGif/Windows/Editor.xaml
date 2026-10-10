@@ -12,7 +12,7 @@
             xmlns:e="clr-namespace:ScreenToGif.Domain.Enums;assembly=ScreenToGif.Domain"
             xmlns:v="clr-namespace:ScreenToGif.ViewModel;assembly=ScreenToGif.ViewModel"
             x:Name="EditorWindow" Title="{DynamicResource S.Editor.Title}" MinHeight="500" MinWidth="700"
-            Background="{DynamicResource Panel.Background.Level3}" UseLayoutRounding="True" Icon="/Resources/Logo.ico"
+            Background="{DynamicResource Fluent.Window.Background}" UseLayoutRounding="True" Icon="/Resources/Logo.ico"
             FocusManager.FocusedElement="{Binding RelativeSource={x:Static RelativeSource.Self}, Mode=OneTime}"
             Loaded="Window_Loaded" Closing="Window_Closing" Activated="Window_Activated" KeyUp="Window_KeyUp" 
             DpiChanged="Window_DpiChanged" Deactivated="Window_Deactivated">
@@ -35,6 +35,9 @@
         <c:BoolAndToVisibility x:Key="BoolAndToVisibility"/>
         <c:IntToBool x:Key="IntToBool"/>
         <c:BoolAndOrOrToVisibility x:Key="BoolAndOrOrToVisibility"/>
+
+        <!--Bordered buttons without an explicit style follow the Windows 11 look.-->
+        <Style TargetType="{x:Type n:ExtendedButton}" BasedOn="{StaticResource Fluent.Button.Standard}"/>
 
         <Storyboard x:Key="ShowPanelStoryboard">
             <BooleanAnimationUsingKeyFrames Storyboard.TargetName="ActionGrid" Storyboard.TargetProperty="IsHitTestVisible" Duration="0:0:0">
@@ -425,16 +428,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="24"/>
         </Grid.RowDefinitions>
 
-        <n:HideableTabControl Grid.Row="0" x:Name="RibbonTabControl" Effect="{StaticResource Shadow.Border.Tiny}" FontSize="13" IsTabStop="False" Focusable="False"
+        <n:HideableTabControl Grid.Row="0" x:Name="RibbonTabControl" FontSize="13" IsTabStop="False" Focusable="False"
                               OptionsCommand="{Binding Source={StaticResource AppViewModel}, Path=OpenOptions}" FeedbackCommand="{Binding Source={StaticResource AppViewModel}, Path=OpenFeedback}"
                               TroubleshootCommand="{Binding Source={StaticResource AppViewModel}, Path=OpenTroubleshoot}" HelpCommand="{Binding Source={StaticResource AppViewModel}, Path=OpenHelp}"
+                              ExportCommand="{StaticResource Command.SaveAs}"
                               DataContext="{Binding ElementName=FrameListView, Path=SelectedItem}">
 
             <n:AwareTabItem Header="{DynamicResource S.Editor.File}" Icon="{StaticResource Vector.Save}">
-                <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}" Effect="{StaticResource Shadow.Invariant}">
+                <Grid Height="94" Margin="2" Background="Transparent" Effect="{StaticResource Shadow.Invariant}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="7"/>
@@ -461,30 +465,30 @@
 
                         <Label Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" Content="{DynamicResource S.Editor.File.New}" 
 							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-							   FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+							   Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Column="0" Grid.Row="0" x:Name="NewRecordingButton" Text="{DynamicResource S.Editor.File.New.Recording}" Icon="{StaticResource Vector.Record.New}" 
-							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewRecording}" Style="{StaticResource Style.Button.Vertical}"
+							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewRecording}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="1" Grid.Row="0" x:Name="NewWebcamRecordingButton" Text="{DynamicResource S.Editor.File.New.Webcam}" Icon="{StaticResource Vector.Camera.New}" 
-							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewWebcamRecording}" Style="{StaticResource Style.Button.Vertical}"
+							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewWebcamRecording}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="2" Grid.Row="0" x:Name="NewBoardRecordingButton" Text="{DynamicResource S.Editor.File.New.Board}" Icon="{StaticResource Vector.Board.New}" 
-							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewBoardRecording}" Style="{StaticResource Style.Button.Vertical}" 
+							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewBoardRecording}" Style="{StaticResource Fluent.Button.Vertical}" 
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="3" Grid.Row="0" x:Name="NewAnimationButton" Text="{DynamicResource S.Editor.File.Blank}" Icon="{StaticResource Vector.File.New}" 
-							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewAnimation}" Style="{StaticResource Style.Button.Vertical}" 
+							              MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NewAnimation}" Style="{StaticResource Fluent.Button.Vertical}" 
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     </Grid>
 
-                    <Separator Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <Grid Grid.Column="2" Margin="0,1,0,0" IsEnabled="{Binding FilledList, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:Editor}}}">
                         <Grid.ColumnDefinitions>
@@ -500,30 +504,30 @@
 
                         <Label Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" Content="{DynamicResource S.Editor.File.Insert}" 
 							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-							   FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+							   Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Column="0" Grid.Row="0" x:Name="InsertRecordingButton" Text="{DynamicResource S.Editor.File.Insert.Recording}" Icon="{StaticResource Vector.Record.Add}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertRecording}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertRecording}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="1" Grid.Row="0" x:Name="InsertWebcamRecordingButton" Text="{DynamicResource S.Editor.File.Insert.Webcam}" Icon="{StaticResource Vector.Camera.Add}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertWebcamRecording}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertWebcamRecording}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="2" Grid.Row="0" x:Name="InsertBoardRecordingButton" Text="{DynamicResource S.Editor.File.Insert.Board}" Icon="{StaticResource Vector.Board.Add}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertBoardRecording}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertBoardRecording}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="3" Grid.Row="0" x:Name="InsertImageButton" Text="{DynamicResource S.Editor.File.Insert.Media}" Icon="{StaticResource Vector.Open}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertFromMedia}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.InsertFromMedia}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     </Grid>
 
-                    <Separator Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <Grid Grid.Column="4" Margin="0,1,0,0">
                         <Grid.ColumnDefinitions>
@@ -539,37 +543,37 @@
 
                         <Label Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" Content="{DynamicResource S.Editor.File}" 
 							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-							   FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+							   Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Column="0" Grid.Row="0" x:Name="SaveButton" Text="{DynamicResource S.Editor.File.Save}" Icon="{StaticResource Vector.Save}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.SaveAs}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.SaveAs}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"
                                           IsEnabled="{Binding FilledList, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:Editor}}}"/>
 
                         <n:ExtendedButton Grid.Column="1" Grid.Row="0" x:Name="LoadButton" Text="{DynamicResource S.Editor.File.Load}" Icon="{StaticResource Vector.Open}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.Load}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.Load}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="2" Grid.Row="0" x:Name="RecentButton" Text="{DynamicResource S.Editor.File.LoadRecent}" Icon="{StaticResource Vector.Project}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.LoadRecent}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.LoadRecent}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="3" Grid.Row="0" x:Name="DiscardProjectButton" Text="{DynamicResource S.Editor.File.Discard}" Icon="{StaticResource Vector.Remove}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.DiscardProject}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.DiscardProject}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"
                                           IsEnabled="{Binding FilledList, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:Editor}}}"/>
                     </Grid>
 
-                    <Separator Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
                 </Grid>
             </n:AwareTabItem>
 
             <n:AwareTabItem Header="{DynamicResource S.Editor.Home}" Icon="{StaticResource Vector.Editor}" IsSelected="True">
-                <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}">
+                <Grid Height="94" Margin="2" Background="Transparent">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="7"/>
@@ -595,10 +599,10 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Content="{DynamicResource S.Editor.Home.ActionStack}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton x:Name="UndoButton" Grid.Row="0" Grid.Column="0" Text="{DynamicResource S.Editor.Home.Undo}" Icon="{StaticResource Vector.Undo}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Undo}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Undo}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -609,18 +613,18 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="ResetButton" Grid.Row="0" Text="{DynamicResource S.Editor.Home.Reset}" Icon="{StaticResource Vector.Repeat}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Reset}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Reset}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="RedoButton" Grid.Row="1" Text="{DynamicResource S.Editor.Home.Redo}" Icon="{StaticResource Vector.Redo}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Redo}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Redo}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <!--Clipboard-->
                     <Grid Grid.Column="2" Margin="0,1,0,0">
@@ -641,15 +645,15 @@
 
                             <Label Grid.Column="0" Content="{DynamicResource S.Editor.Home.Clipboard}" 
 						           HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						           FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						           Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                             <n:ExtendedButton Grid.Column="1" x:Name="ShowClipboardButton" Icon="{StaticResource Vector.Launcher}"
-						                      Margin="0,0,-2,-2" MinWidth="10" Padding="5,0" ContentHeight="8" ContentWidth="8" Style="{StaticResource Style.Button.NoText}" 
+						                      Margin="0,0,-2,-2" MinWidth="10" Padding="5,0" ContentHeight="8" ContentWidth="8" Style="{StaticResource Fluent.Button.NoText}" 
                                               ToolTip="{DynamicResource S.Editor.Home.Clipboard.Show}" ToolTipService.Placement="Bottom" Click="ShowClipboardButton_Click" />
                         </Grid>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="0" x:Name="PasteButton" Text="{DynamicResource S.Editor.Home.Paste}" Icon="{StaticResource Vector.Paste}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Paste}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Paste}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -660,18 +664,18 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="CopyButton" Grid.Row="0" Grid.Column="0" Text="{DynamicResource S.Editor.Home.Copy}" Icon="{StaticResource Vector.Copy}"
-						                      Padding="2" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Copy}"
+						                      Padding="2" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Copy}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="CutButton" Grid.Row="1" Text="{DynamicResource S.Editor.Home.Cut}" Icon="{StaticResource Vector.Cut}"
-						                      Padding="2" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Cut}"
+						                      Padding="2" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Cut}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <!--Zoom-->
                     <Grid Grid.Column="4" Margin="0,1,0,0">
@@ -687,15 +691,15 @@
 
                         <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Content="{DynamicResource S.Editor.Home.Zoom}" 
 							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-							   FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+							   Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Column="0" Grid.Row="0" x:Name="Zoom100Button" Text="100%" Icon="{StaticResource Vector.Fit}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Zoom100}" 
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Zoom100}" 
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="1" Grid.Row="0" x:Name="FitOnContentButton" Text="{DynamicResource S.Editor.Home.SizeToContent}" Icon="{StaticResource Vector.SizeToContent}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.SizeToContent}" 
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.SizeToContent}" 
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -714,13 +718,13 @@
 
                             <n:ExtendedButton Grid.Column="0" Grid.Row="1" x:Name="FitButton" Text="{DynamicResource S.Editor.Home.FitImage}" Icon="{StaticResource Vector.PictureFit}" 
 							                  Padding="3" MinWidth="60" ContentWidth="30" ContentHeight="25" VerticalContentAlignment="Center"
-							                  Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.FitImage}" 
+							                  Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.FitImage}" 
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <!--Select-->
                     <Grid Grid.Column="6" Margin="0,1,0,0">
@@ -736,15 +740,15 @@
 
                         <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="SelectLabel" Content="{DynamicResource S.Editor.Home.Select}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="0" x:Name="SelectAllButton" Text="{DynamicResource S.Editor.Home.SelectAll}" Icon="{StaticResource Vector.Cursor}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.SelectAll}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.SelectAll}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="1" x:Name="GoToButton" Text="{DynamicResource S.Editor.Home.GoTo}" Icon="{StaticResource Vector.Forward}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.GoTo}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.GoTo}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -755,23 +759,23 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="InverseSelectionButton" Grid.Row="0" Text="{DynamicResource S.Editor.Home.Inverse}" Icon="{StaticResource Vector.InverseSelection}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.InverseSelection}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.InverseSelection}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="DeselectButton" Grid.Row="1" Text="{DynamicResource S.Editor.Home.Deselect}" Icon="{StaticResource Vector.Unselect}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Unselect}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Unselect}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="7" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="7" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
                 </Grid>
             </n:AwareTabItem>
 
             <n:AwareTabItem Header="{DynamicResource S.Editor.Playback}" Icon="{StaticResource Vector.Play}">
-                <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}" Effect="{StaticResource Shadow.Invariant}">
+                <Grid Height="94" Margin="2" Background="Transparent" Effect="{StaticResource Shadow.Invariant}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="7"/>
@@ -795,35 +799,35 @@
 
                         <Label Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="1" Content="{DynamicResource S.Editor.Playback.Playback}" 
 							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-							   FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+							   Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Column="0" Grid.Row="0" x:Name="FirstButton" Text="{DynamicResource S.Editor.Playback.First}" Icon="{StaticResource Vector.First.Green}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="38" Command="{StaticResource Command.FirstFrame}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="38" Command="{StaticResource Command.FirstFrame}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedRepeatButton Grid.Column="1" Grid.Row="0" x:Name="PreviousButton" Text="{DynamicResource S.Editor.Playback.Previous}" Icon="{StaticResource Vector.Previous.Green}" 
-                                                ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.PreviousFrame}" Style="{StaticResource Style.RepeatButton.Vertical}"
+                                                ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.PreviousFrame}" Style="{StaticResource Fluent.RepeatButton.Vertical}"
                                                 ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}"
                                                 ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="2" Grid.Row="0" x:Name="PlayButton" Text="{DynamicResource S.Editor.Playback.Play}" Icon="{StaticResource Vector.Play}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.Play}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.Play}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedRepeatButton Grid.Column="3" Grid.Row="0" x:Name="NextButton" Text="{DynamicResource S.Editor.Playback.Next}" Icon="{StaticResource Vector.Next.Green}" 
-                                                ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NextFrame}" Style="{StaticResource Style.RepeatButton.Vertical}"
+                                                ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.NextFrame}" Style="{StaticResource Fluent.RepeatButton.Vertical}"
                                                 ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                                 ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="4" Grid.Row="0" x:Name="LastButton" Text="{DynamicResource S.Editor.Playback.Last}" Icon="{StaticResource Vector.Last.Green}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="38" Command="{StaticResource Command.LastFrame}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="38" Command="{StaticResource Command.LastFrame}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     </Grid>
 
-                    <Separator Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
 
                     <Grid Grid.Column="2" Margin="0,1,0,0">
                         <Grid.RowDefinitions>
@@ -834,7 +838,7 @@
 
                         <Label Grid.Column="0" Grid.Row="2" Content="{DynamicResource S.Editor.PlaybackOptions.Header}" 
 							   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-							   FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+							   Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedCheckBox Grid.Column="0" Grid.Row="0" x:Name="LoopedPlaybackCheckBox" Text="{DynamicResource S.Editor.PlaybackOptions.Loop}" 
                                             IsChecked="{Binding LoopedPlayback, Source={x:Static t:UserSettings.All}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -845,12 +849,12 @@
                                              Margin="5,3" ToolTip="{DynamicResource S.Options.Editor.General.DropFramesDuringPreviewIfBehind.Tooltip}" ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     </Grid>
 
-                    <Separator Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
                 </Grid>
             </n:AwareTabItem>
 
             <n:AwareTabItem Header="{DynamicResource S.Editor.Edit}" Icon="{StaticResource Vector.Pen}">
-                <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}">
+                <Grid Height="94" Margin="2" Background="Transparent">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="7"/>
@@ -878,25 +882,25 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Content="{DynamicResource S.Editor.Edit.Frames}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="0" x:Name="DeleteButton" Text="{DynamicResource S.Editor.Edit.Delete}" Icon="{StaticResource Vector.RemoveImage}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Delete}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Delete}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="1" x:Name="DeleteDuplicatesButton" Text="{DynamicResource S.Editor.Edit.Frames.Duplicates}" Icon="{StaticResource Vector.RemoveImage}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.RemoveDuplicates}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.RemoveDuplicates}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="2" x:Name="ReduceButton" Text="{DynamicResource S.Editor.Edit.Frames.Reduce}" Icon="{StaticResource Vector.RemoveImage}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Reduce}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Reduce}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="3" x:Name="SmoothLoopButton" Text="{DynamicResource S.Editor.Edit.Frames.SmoothLoop}" Icon="{StaticResource Vector.Repeat}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.SmoothLoop}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.SmoothLoop}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -907,18 +911,18 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="DeleteBeforeButton" Grid.Row="0" Text="{DynamicResource S.Editor.Edit.DeletePrevious}" Icon="{StaticResource Vector.Delete.Before}"
-						                      Padding="3" MinWidth="60" ContentHeight="30" ContentWidth="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.DeletePrevious}"
+						                      Padding="3" MinWidth="60" ContentHeight="30" ContentWidth="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.DeletePrevious}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="DeleteAfterButton" Grid.Row="1" Text="{DynamicResource S.Editor.Edit.DeleteNext}" Icon="{StaticResource Vector.Delete.After}"
-                                              Padding="3" MinWidth="60" ContentHeight="30" ContentWidth="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.DeleteNext}"
+                                              Padding="3" MinWidth="60" ContentHeight="30" ContentWidth="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.DeleteNext}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <Grid Grid.Column="2" Margin="0,1,0,0">
                         <Grid.ColumnDefinitions>
@@ -933,7 +937,7 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Content="{DynamicResource S.Editor.Edit.Reordering}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <Grid Grid.Row="0" Grid.Column="0">
                             <Grid.RowDefinitions>
@@ -942,28 +946,28 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="ReverseOrderButton" Grid.Row="0" Text="{DynamicResource S.Editor.Edit.Reverse}" Icon="{StaticResource Vector.Invert}"
-						                      Padding="3" ContentHeight="30" ContentWidth="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Reverse}"
+						                      Padding="3" ContentHeight="30" ContentWidth="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Reverse}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="YoyoOrderButton" Grid.Row="1" Text="{DynamicResource S.Editor.Edit.Yoyo}" Icon="{StaticResource Vector.Yoyo}"
-						                      Padding="3" ContentHeight="30" ContentWidth="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Yoyo}"
+						                      Padding="3" ContentHeight="30" ContentWidth="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Yoyo}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
 
                         <n:ExtendedButton x:Name="MoveLeftButton" Grid.Row="0" Grid.Column="1" Text="{DynamicResource S.Editor.Edit.MoveLeft}" Icon="{StaticResource Vector.MoveLeft}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.MoveLeft}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.MoveLeft}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton x:Name="MoveRightButton" Grid.Row="0" Grid.Column="2" Text="{DynamicResource S.Editor.Edit.MoveRight}" Icon="{StaticResource Vector.MoveRight}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.MoveRight}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.MoveRight}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     </Grid>
 
-                    <Separator Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <Grid Grid.Column="4" Margin="0,1,0,0">
                         <Grid.RowDefinitions>
@@ -978,30 +982,30 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Content="{DynamicResource S.Editor.Edit.Delay}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Column="0" Grid.Row="0" x:Name="OverrideDelayButton" Text="{DynamicResource S.Editor.Edit.Delay.Override}" Icon="{StaticResource Vector.OverrideDelay}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.OverrideDelay}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.OverrideDelay}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="1" Grid.Row="0" x:Name="ChangeDelayButton" Text="{DynamicResource S.Editor.Edit.Delay.IncreaseDecrease}" Icon="{StaticResource Vector.IncreaseDecreaseDelay}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.IncreaseDecreaseDelay}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.IncreaseDecreaseDelay}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Column="2" Grid.Row="0" x:Name="ScaleDelayButton" Text="{DynamicResource S.Editor.Edit.Delay.Scale}" Icon="{StaticResource Vector.ScaleDelay}" 
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.ScaleDelay}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.ScaleDelay}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     </Grid>
 
-                    <Separator Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
                 </Grid>
             </n:AwareTabItem>
 
             <n:AwareTabItem Header="{DynamicResource S.Editor.Image}" Icon="{StaticResource Vector.Image}">
-                <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}">
+                <Grid Height="94" Margin="2" Background="Transparent">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="7"/>
@@ -1024,10 +1028,10 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Content="{DynamicResource S.Editor.Image.SizePosition}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton x:Name="ResizeButton" Grid.Row="0" Grid.Column="0" Text="{DynamicResource S.Editor.Image.Resize}" Icon="{StaticResource Vector.Resize}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Resize}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Resize}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -1038,18 +1042,18 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="CropButton" Grid.Row="0" Text="{DynamicResource S.Editor.Image.Crop}" Icon="{StaticResource Vector.Crop}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.Crop}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.Crop}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="FlipRotateButton" Grid.Row="1" Text="{DynamicResource S.Editor.Image.FlipRotate}" Icon="{StaticResource Vector.FlipHorizontal}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Style.Button.Horizontal}" Command="{StaticResource Command.FlipRotate}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Style="{StaticResource Fluent.Button.Horizontal}" Command="{StaticResource Command.FlipRotate}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
 
                     <Grid Grid.Column="2" Margin="0,1,0,0">
                         <Grid.ColumnDefinitions>
@@ -1064,15 +1068,15 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Content="{DynamicResource S.Editor.Image.Text}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton x:Name="CaptionButton" Grid.Row="0" Grid.Column="0" Text="{DynamicResource S.Editor.Image.Caption}" Icon="{StaticResource Vector.Caption}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.Caption}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="28" Command="{StaticResource Command.Caption}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton x:Name="KeypressButton" Grid.Row="0" Grid.Column="1" Text="{DynamicResource S.Editor.Image.KeyStrokes}" Icon="{StaticResource Vector.Keyboard}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.KeyStrokes}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.KeyStrokes}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -1083,18 +1087,18 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="FreeTextButton" Grid.Row="0" Text="{DynamicResource S.Editor.Image.FreeText}" Icon="{StaticResource Vector.FreeText}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.FreeText}" Style="{StaticResource Style.Button.Horizontal}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.FreeText}" Style="{StaticResource Fluent.Button.Horizontal}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="TitleFrameButton" Grid.Row="1" Text="{DynamicResource S.Editor.Image.TitleFrame}" Icon="{StaticResource Vector.TitleFrame}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.TitleFrame}" Style="{StaticResource Style.Button.Horizontal}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.TitleFrame}" Style="{StaticResource Fluent.Button.Horizontal}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="3" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
 
                     <Grid Grid.Column="4" Margin="0,1,0,0">
                         <Grid.ColumnDefinitions>
@@ -1114,40 +1118,40 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="8" Content="{DynamicResource S.Editor.Image.Overlay}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton x:Name="FreeDrawButton" Grid.Row="0" Grid.Column="0" Text="{DynamicResource S.Editor.Image.FreeDrawing}" Icon="{StaticResource Vector.FreeDrawing}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.FreeDrawing}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.FreeDrawing}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton x:Name="ShapesButton" Grid.Row="0" Grid.Column="1" Text="{DynamicResource S.Editor.Image.Shape}" Icon="{StaticResource Vector.Ellipse}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Shapes}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Shapes}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="2" x:Name="ProgressButton" Text="{DynamicResource S.Editor.Image.Progress}" Icon="{StaticResource Vector.Progress}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Progress}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Progress}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="3" Text="{DynamicResource S.Editor.Image.MouseEvents}" Icon="{StaticResource Vector.Cursor}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.MouseEvents}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.MouseEvents}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="4" x:Name="BorderButton" Text="{DynamicResource S.Editor.Image.Border}" Icon="{StaticResource Vector.Border}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Border}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Border}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="5" x:Name="ShadowButton" Text="{DynamicResource S.Editor.Image.Shadow}" Icon="{StaticResource Vector.Shadow}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Shadow}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Shadow}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="6" x:Name="ObfuscateButton" Text="{DynamicResource S.Editor.Image.Obfuscate}" Icon="{StaticResource Vector.Obfuscate}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Obfuscate}" Style="{StaticResource Style.Button.Vertical}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Command="{StaticResource Command.Obfuscate}" Style="{StaticResource Fluent.Button.Vertical}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
@@ -1158,23 +1162,23 @@
                             </Grid.RowDefinitions>
 
                             <n:ExtendedButton x:Name="WatermarkButton" Grid.Row="0" Text="{DynamicResource S.Editor.Image.Watermark}" Icon="{StaticResource Vector.Watermark}"
-                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.Watermark}" Style="{StaticResource Style.Button.Horizontal}"
+                                              Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.Watermark}" Style="{StaticResource Fluent.Button.Horizontal}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
 
                             <n:ExtendedButton x:Name="CinemagraphButton" Grid.Row="1" Text="{DynamicResource S.Editor.Image.Cinemagraph}" Icon="{StaticResource Vector.Cinemagraph}"
-						                      Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.Cinemagraph}" Style="{StaticResource Style.Button.Horizontal}"
+						                      Padding="3" MinWidth="60" ContentWidth="25" ContentHeight="25" Command="{StaticResource Command.Cinemagraph}" Style="{StaticResource Fluent.Button.Horizontal}"
                                               ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                               ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                         </Grid>
                     </Grid>
 
-                    <Separator Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="5" Grid.Row="0" Width="1" Height="Auto" Margin="3,2"/>
                 </Grid>
             </n:AwareTabItem>
 
             <n:AwareTabItem Header="{DynamicResource S.Editor.Transitions}" Icon="{StaticResource Vector.Fade}">
-                <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}">
+                <Grid Height="94" Margin="2" Background="Transparent">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="7"/>
@@ -1193,25 +1197,25 @@
 
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="StylesLabel" Content="{DynamicResource S.Editor.Transitions.Styles}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <n:ExtendedButton Grid.Row="0"  Grid.Column="0" x:Name="FadeTransitionButton" Text="{DynamicResource S.Editor.Transitions.Fade}" Icon="{StaticResource Vector.Fade}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Fade}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Fade}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                         <n:ExtendedButton Grid.Row="0" Grid.Column="1" x:Name="SlideTransitionButton" Text="{DynamicResource S.Editor.Transitions.Slide}" Icon="{StaticResource Vector.Slide}"
-                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Style.Button.Vertical}" Command="{StaticResource Command.Slide}"
+                                          MinWidth="55" ContentHeight="28" ContentWidth="32" Style="{StaticResource Fluent.Button.Vertical}" Command="{StaticResource Command.Slide}"
                                           ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                           ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     </Grid>
 
-                    <Separator Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
                 </Grid>
             </n:AwareTabItem>
 
             <n:AwareTabItem Header="{DynamicResource S.Editor.Statistics}" Icon="{StaticResource Vector.Info}">
-                <Grid Height="94" Margin="2" Background="{DynamicResource Panel.Background.Level2}" Effect="{StaticResource Shadow.Invariant}">
+                <Grid Height="94" Margin="2" Background="Transparent" Effect="{StaticResource Shadow.Invariant}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="7"/>
@@ -1243,7 +1247,7 @@
 
                         <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="8" Content="{DynamicResource S.Editor.Statistics.General}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <Border Grid.Row="0" Grid.Column="0" Background="{StaticResource Vector.Number}" Height="18" Width="18" VerticalAlignment="Center" Opacity="{DynamicResource Element.Opacity}"/>
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{DynamicResource S.Editor.Statistics.FrameCount}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0" Foreground="{DynamicResource Element.Foreground}"/>
@@ -1288,7 +1292,7 @@
                                    Foreground="{DynamicResource Element.Foreground.Header}"/>
                     </Grid>
 
-                    <Separator Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
+                    <Separator Style="{StaticResource Fluent.Separator.Ribbon}" Grid.Column="1" Grid.Row="0" Width="1" Height="Auto" HorizontalAlignment="Left" Margin="3,2"/>
 
                     <Grid Grid.Column="2" Margin="0,1,0,0" MinWidth="150">
                         <Grid.RowDefinitions>
@@ -1302,7 +1306,7 @@
 
                         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Content="{DynamicResource S.Editor.Statistics.SelectedFrame}" 
 						       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" 
-						       FontSize="12" Foreground="{DynamicResource Element.Foreground.Gray112}"/>
+						       Style="{StaticResource Fluent.Label.RibbonGroup}"/>
 
                         <Viewbox Grid.Row="0" Grid.Column="0">
                             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="{DynamicResource Element.Opacity}">
@@ -1326,10 +1330,10 @@
         </n:HideableTabControl>
 
         <!--Hack for the extended title bar-->
-        <Grid Grid.Row="1" Grid.RowSpan="3" Background="{DynamicResource Panel.Background.Level3}"/>
+        <Grid Grid.Row="1" Grid.RowSpan="3" Background="{DynamicResource Fluent.Window.Background}"/>
 
         <!--Middle of the Window-->
-        <Grid Grid.Row="1" x:Name="MiddleGrid" Background="{StaticResource Checker.DrawingBrush}" IsEnabled="{Binding Path=IsLoading, ElementName=EditorWindow, Converter={StaticResource InvertedBoolConverter}}">
+        <Grid Grid.Row="1" x:Name="MiddleGrid" Margin="8,0,8,6" n:CornerClip.Radius="8" Background="{StaticResource Checker.DrawingBrush}" IsEnabled="{Binding Path=IsLoading, ElementName=EditorWindow, Converter={StaticResource InvertedBoolConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
@@ -1636,7 +1640,7 @@
                 </Grid>
             </ScrollViewer>
 
-            <Grid Grid.Row="1" Grid.Column="0" x:Name="WelcomeGrid" Background="{DynamicResource Panel.Background.Level3}" Visibility="Visible" AllowDrop="True" Drop="Control_Drop" DragEnter="Control_DragEnter">
+            <Grid Grid.Row="1" Grid.Column="0" x:Name="WelcomeGrid" Background="{DynamicResource Fluent.Card.Background}" Visibility="Visible" AllowDrop="True" Drop="Control_Drop" DragEnter="Control_DragEnter">
                 <Grid.ContextMenu>
                     <ContextMenu>
                         <n:ExtendedMenuItem Header="{DynamicResource S.Context.NewRecording}" Icon="{StaticResource Vector.Record.New}" ContentHeight="16" ContentWidth="16" Command="{StaticResource Command.NewRecording}"/>
@@ -1687,7 +1691,7 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="ActionGrid" Width="0" Background="{DynamicResource Panel.Background.Level2}" Effect="{StaticResource Shadow.Border}">
+            <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="ActionGrid" Width="0" Background="{DynamicResource Fluent.Card.Background}" Effect="{StaticResource Shadow.Border}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
@@ -1707,7 +1711,7 @@
                     <TextBlock Grid.Column="1" x:Name="ActionTitleTextBlock" Text="Title" Padding="5,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource Element.Foreground}"/>
 
                     <n:ExtendedButton Grid.Column="2" x:Name="HideButton" Icon="{DynamicResource Vector.Close}" ContentHeight="16" ContentWidth="16" HorizontalContentAlignment="Center" 
-                                      HorizontalAlignment="Center" Style="{DynamicResource Style.Button.NoText}" MinWidth="30" Command="{StaticResource Command.Cancel}"
+                                      HorizontalAlignment="Center" Style="{DynamicResource Fluent.Button.NoText}" MinWidth="30" Command="{StaticResource Command.Cancel}"
                                       ToolTip="{DynamicResource S.Action.Hide}" ToolTipService.Placement="Top" ToolTipService.HorizontalOffset="-5"/>
                 </Grid>
 
@@ -4297,7 +4301,13 @@
                     </Grid.ColumnDefinitions>
 
                     <n:ExtendedButton Grid.Column="0" x:Name="ApplyButton" Text="{DynamicResource S.Action.Apply}" Padding="2,0" MinWidth="90" KeyGesture="Alt + E / Enter"
-                                      FontSize="13" Margin="5" ContentHeight="22" Icon="{StaticResource Vector.Ok}" Command="{StaticResource Command.Ok}"/>
+                                      FontSize="13" Margin="5" ContentHeight="22" Icon="{StaticResource Vector.Ok}" Command="{StaticResource Command.Ok}"
+                                      Style="{StaticResource Fluent.Button.Accent}">
+                        <n:ExtendedButton.Resources>
+                            <!--Shortcut hint, readable on the accent fill.-->
+                            <SolidColorBrush x:Key="Element.Foreground.Gray112" Color="{DynamicResource Fluent.Color.TextOnAccent}" Opacity="0.7"/>
+                        </n:ExtendedButton.Resources>
+                    </n:ExtendedButton>
 
                     <n:ExtendedButton Grid.Column="1" x:Name="CancelButton" Text="{DynamicResource S.Action.Cancel}" Padding="2,0" MinWidth="90" KeyGesture="Esc"
                                       FontSize="13" Margin="5" ContentHeight="22" Icon="{StaticResource Vector.Cancel}" Command="{StaticResource Command.Cancel}"/>
@@ -4306,79 +4316,82 @@
         </Grid>
 
         <!--Lower part of the Window-->
-        <ListView Grid.Row="2" x:Name="FrameListView" BorderThickness="0,1,0,0" IsTabStop="False" Focusable="False" Style="{StaticResource Style.ListView.Frames}"
-                  ItemsSource="{Binding Path=DataContext.Frames, ElementName=EditorWindow}" IsEnabled="{Binding Path=IsLoading, ElementName=EditorWindow, Converter={StaticResource InvertedBoolConverter}}"
-                  Visibility="{Binding RelativeSource={RelativeSource Self}, Path=HasItems, Converter={StaticResource Bool2Visibility}}"
-                  SelectionChanged="FrameListView_SelectionChanged" PreviewKeyDown="FrameListView_PreviewKeyDown"
-                  PreviewMouseWheel="FrameListView_PreviewMouseWheel"
-                  SelectedIndex="{Binding CurrentIndex, Mode=OneWayToSource}">
+        <Border Grid.Row="2" x:Name="FrameListBorder" Margin="8,0,8,2" Padding="2" CornerRadius="8" BorderThickness="1" BorderBrush="{DynamicResource Fluent.Card.Border}"
+                Background="{DynamicResource Fluent.Card.Background}" Visibility="{Binding ElementName=FrameListView, Path=Visibility}">
+            <ListView x:Name="FrameListView" BorderThickness="0" Background="Transparent" IsTabStop="False" Focusable="False" Style="{StaticResource Style.ListView.Frames}"
+                      ItemsSource="{Binding Path=DataContext.Frames, ElementName=EditorWindow}" IsEnabled="{Binding Path=IsLoading, ElementName=EditorWindow, Converter={StaticResource InvertedBoolConverter}}"
+                      Visibility="{Binding RelativeSource={RelativeSource Self}, Path=HasItems, Converter={StaticResource Bool2Visibility}}"
+                      SelectionChanged="FrameListView_SelectionChanged" PreviewKeyDown="FrameListView_PreviewKeyDown"
+                      PreviewMouseWheel="FrameListView_PreviewMouseWheel"
+                      SelectedIndex="{Binding CurrentIndex, Mode=OneWayToSource}">
 
-            <ListView.Resources>
-                <ContextMenu x:Key="FrameListContextMenu">
-                    <n:ExtendedMenuItem Header="{DynamicResource S.Editor.List.OpenImage}" Icon="{StaticResource Vector.Image}" ContentHeight="16" ContentWidth="16" Command="{StaticResource Command.OpenImage}"/>
-                    <n:ExtendedMenuItem Header="{DynamicResource S.Editor.List.ExploreFolder}" Icon="{StaticResource Vector.Open}" ContentHeight="16" ContentWidth="16" Command="{StaticResource Command.ExploreFolder}"/>
-                </ContextMenu>
-            </ListView.Resources>
+                <ListView.Resources>
+                    <ContextMenu x:Key="FrameListContextMenu">
+                        <n:ExtendedMenuItem Header="{DynamicResource S.Editor.List.OpenImage}" Icon="{StaticResource Vector.Image}" ContentHeight="16" ContentWidth="16" Command="{StaticResource Command.OpenImage}"/>
+                        <n:ExtendedMenuItem Header="{DynamicResource S.Editor.List.ExploreFolder}" Icon="{StaticResource Vector.Open}" ContentHeight="16" ContentWidth="16" Command="{StaticResource Command.ExploreFolder}"/>
+                    </ContextMenu>
+                </ListView.Resources>
 
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Item_PreviewMouseLeftButtonDown"/>
-                    <Setter Property="ContextMenu" Value="{StaticResource FrameListContextMenu}"/>
-                    <Setter Property="BorderThickness" Value="1"/>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Item_PreviewMouseLeftButtonDown"/>
+                        <Setter Property="ContextMenu" Value="{StaticResource FrameListContextMenu}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
 
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" SnapsToDevicePixels="True">
-                                    <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1"/>
-                                </Border>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" SnapsToDevicePixels="True">
+                                        <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1"/>
+                                    </Border>
 
-                                <ControlTemplate.Triggers>
-                                    <MultiTrigger>
-                                        <MultiTrigger.Conditions>
-                                            <Condition Property="IsMouseOver" Value="True"/>
-                                        </MultiTrigger.Conditions>
+                                    <ControlTemplate.Triggers>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsMouseOver" Value="True"/>
+                                            </MultiTrigger.Conditions>
 
-                                        <Setter Property="Background" TargetName="Border" Value="{DynamicResource Item.MouseOver.Background}"/>
-                                        <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Item.MouseOver.Border}"/>
-                                    </MultiTrigger>
+                                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource Item.MouseOver.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Item.MouseOver.Border}"/>
+                                        </MultiTrigger>
 
-                                    <MultiTrigger>
-                                        <MultiTrigger.Conditions>
-                                            <Condition Property="Selector.IsSelectionActive" Value="False"/>
-                                            <Condition Property="IsSelected" Value="True"/>
-                                        </MultiTrigger.Conditions>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                                <Condition Property="IsSelected" Value="True"/>
+                                            </MultiTrigger.Conditions>
 
-                                        <Setter Property="Background" TargetName="Border" Value="{DynamicResource Item.SelectedInactive.Background}"/>
-                                        <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Item.SelectedInactive.Border}"/>
-                                    </MultiTrigger>
+                                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource Item.SelectedInactive.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Item.SelectedInactive.Border}"/>
+                                        </MultiTrigger>
 
-                                    <MultiTrigger>
-                                        <MultiTrigger.Conditions>
-                                            <Condition Property="Selector.IsSelectionActive" Value="True"/>
-                                            <Condition Property="IsSelected" Value="True"/>
-                                        </MultiTrigger.Conditions>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                                <Condition Property="IsSelected" Value="True"/>
+                                            </MultiTrigger.Conditions>
 
-                                        <Setter Property="Background" TargetName="Border" Value="{DynamicResource Item.SelectedActive.Background}"/>
-                                        <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Item.SelectedActive.Border}"/>
-                                    </MultiTrigger>
+                                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource Item.SelectedActive.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Item.SelectedActive.Border}"/>
+                                        </MultiTrigger>
 
-                                    <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="Opacity" Value="0.7"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0.7"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
 
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Border>
 
         <!--Status bar-->
-        <Border Grid.Row="3" x:Name="LowerGrid" Height="20">
-            <Grid x:Name="LowerStatusBar" Height="20" Background="{DynamicResource Panel.Background.Level3}">
+        <Border Grid.Row="3" x:Name="LowerGrid" Height="24">
+            <Grid x:Name="LowerStatusBar" Height="24" Margin="4,0" Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="7"/>
@@ -4400,7 +4413,7 @@
 
                     <Label Grid.Column="0" x:Name="StatusLabel" Content="Status" Padding="0" VerticalContentAlignment="Center" Margin="5,0" Foreground="{DynamicResource Element.Foreground.Medium}"/>
                     <ProgressBar Grid.Column="1" x:Name="StatusProgressBar" Height="8" Width="200" Margin="2,0" VerticalAlignment="Center"/>
-                    <n:ExtendedButton Grid.Column="2" x:Name="CancelLoadingButton" Width="25" Icon="{StaticResource Vector.Cancel}" Style="{StaticResource Style.Button.NoText}" ContentWidth="15" ContentHeight="15"
+                    <n:ExtendedButton Grid.Column="2" x:Name="CancelLoadingButton" Width="25" Icon="{StaticResource Vector.Cancel}" Style="{StaticResource Fluent.Button.NoText}" ContentWidth="15" ContentHeight="15"
                                       ToolTip="{DynamicResource S.Editor.CancelDiscard}" Visibility="{Binding ElementName=EditorWindow, Path=IsCancelable, Converter={StaticResource Bool2Visibility}}" 
                                       Click="CancelLoadingButton_Click"/>
                 </Grid>
@@ -4452,25 +4465,25 @@
                     </Grid.ColumnDefinitions>
 
                     <n:ExtendedButton Grid.Column="0" x:Name="FirstRepeatButton" Icon="{StaticResource Vector.First.Green}" ContentWidth="20" ContentHeight="12"
-                                      Width="40" Text="" Style="{StaticResource Style.Button.NoText}" Command="{StaticResource Command.FirstFrame}"
+                                      Width="40" Text="" Style="{StaticResource Fluent.Button.NoText}" Command="{StaticResource Command.FirstFrame}"
                                       ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                       ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     <n:ExtendedRepeatButton Grid.Column="1" x:Name="PreviousRepeatButton" Icon="{StaticResource Vector.Previous.Green}" ContentWidth="17" ContentHeight="17"
-                                            Width="40" Style="{StaticResource Style.RepeatButton.NoText}" Command="{StaticResource Command.PreviousFrame}"
+                                            Width="40" Style="{StaticResource Fluent.RepeatButton.NoText}" Command="{StaticResource Command.PreviousFrame}"
                                             ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                             ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                     <n:ExtendedButton Grid.Column="2" x:Name="PlayPauseButton" Icon="{StaticResource Vector.Play}" ContentWidth="15" ContentHeight="15"
-                                      Width="40" Style="{StaticResource Style.Button.NoText}" Command="{StaticResource Command.Play}"
+                                      Width="40" Style="{StaticResource Fluent.Button.NoText}" Command="{StaticResource Command.Play}"
                                       ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                       ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
 
                     <n:ExtendedRepeatButton Grid.Column="3" x:Name="NextRepeatButton" Icon="{StaticResource Vector.Next.Green}" ContentWidth="17" ContentHeight="17"
-                                            Width="40" Style="{StaticResource Style.RepeatButton.NoText}" Command="{StaticResource Command.NextFrame}"
+                                            Width="40" Style="{StaticResource Fluent.RepeatButton.NoText}" Command="{StaticResource Command.NextFrame}"
                                             ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                             ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                     <n:ExtendedButton Grid.Column="4" x:Name="LastRepeatButton" Icon="{StaticResource Vector.Last.Green}" ContentWidth="20" ContentHeight="12"
-                                      Width="40" Style="{StaticResource Style.Button.NoText}" Command="{StaticResource Command.LastFrame}"
+                                      Width="40" Style="{StaticResource Fluent.Button.NoText}" Command="{StaticResource Command.LastFrame}"
                                       ToolTip="{Binding Command, RelativeSource={RelativeSource Self}, Converter={StaticResource CommandToInputGestureText}}" 
                                       ToolTipService.Placement="Bottom" ToolTipService.HorizontalOffset="-5"/>
                 </Grid>

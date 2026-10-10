@@ -1,0 +1,118 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:n="clr-namespace:ScreenToGif.Controls">
+
+    <!--Windows 11 (Segoe Fluent Icons) replacements for the Vector.* icons, merged after Vectors.xaml so they take precedence.
+        The glyphs are painted with the theme brushes and the dictionary is reloaded when the theme changes (ThemeHelper).-->
+
+    <n:FluentIcon x:Key="Vector.Record" Glyph="EA3B" Brush="Fluent.Record"/>
+    <n:FluentIcon x:Key="Vector.Record.New" Glyph="EA3B" Brush="Fluent.Record"/>
+    <n:FluentIcon x:Key="Vector.Record.Add" Glyph="EA3B" Brush="Fluent.Record"/>
+    <n:FluentIcon x:Key="Vector.Camera" Glyph="E722"/>
+    <n:FluentIcon x:Key="Vector.Camera.New" Glyph="E960"/>
+    <n:FluentIcon x:Key="Vector.Camera.Add" Glyph="E960"/>
+    <n:FluentIcon x:Key="Vector.Board.New" Glyph="EE56"/>
+    <n:FluentIcon x:Key="Vector.Board.Add" Glyph="EE56"/>
+    <n:FluentIcon x:Key="Vector.File.New" Glyph="E7C3"/>
+    <n:FluentIcon x:Key="Vector.Save" Glyph="E74E"/>
+    <n:FluentIcon x:Key="Vector.Export" Glyph="EDE1"/>
+    <n:FluentIcon x:Key="Vector.Open" Glyph="E838"/>
+    <n:FluentIcon x:Key="Vector.Project" Glyph="E81C"/>
+    <n:FluentIcon x:Key="Vector.Remove" Glyph="E74D"/>
+    <n:FluentIcon x:Key="Vector.RemoveImage" Glyph="E74D"/>
+    <n:FluentIcon x:Key="Vector.Delete.Before" Glyph="E74D"/>
+    <n:FluentIcon x:Key="Vector.Delete.After" Glyph="E74D"/>
+    <n:FluentIcon x:Key="Vector.Editor" Glyph="EB9F"/>
+    <n:FluentIcon x:Key="Vector.Launcher" Glyph="E80F"/>
+    <n:FluentIcon x:Key="Vector.Options" Glyph="E713"/>
+    <n:FluentIcon x:Key="Vector.Application" Glyph="E7C4"/>
+    <n:FluentIcon x:Key="Vector.Monitor" Glyph="E7F4"/>
+    <n:FluentIcon x:Key="Vector.Gif" Glyph="F4A9"/>
+    <n:FluentIcon x:Key="Vector.Image" Glyph="E8B9"/>
+    <n:FluentIcon x:Key="Vector.Keyboard" Glyph="E765"/>
+    <n:FluentIcon x:Key="Vector.Undo" Glyph="E7A7"/>
+    <n:FluentIcon x:Key="Vector.Redo" Glyph="E7A6"/>
+    <n:FluentIcon x:Key="Vector.Repeat" Glyph="E72C"/>
+    <n:FluentIcon x:Key="Vector.Paste" Glyph="E77F"/>
+    <n:FluentIcon x:Key="Vector.Copy" Glyph="E8C8"/>
+    <n:FluentIcon x:Key="Vector.Cut" Glyph="E8C6"/>
+    <n:FluentIcon x:Key="Vector.Zoom" Glyph="E71E"/>
+    <n:FluentIcon x:Key="Vector.Fit" Glyph="E9A6"/>
+    <n:FluentIcon x:Key="Vector.SizeToContent" Glyph="E740"/>
+    <n:FluentIcon x:Key="Vector.PictureFit" Glyph="E73F"/>
+    <n:FluentIcon x:Key="Vector.Cursor" Glyph="E8B0"/>
+    <n:FluentIcon x:Key="Vector.Select" Glyph="EF20"/>
+    <n:FluentIcon x:Key="Vector.InverseSelection" Glyph="E8B3"/>
+    <n:FluentIcon x:Key="Vector.Unselect" Glyph="E8E6"/>
+    <n:FluentIcon x:Key="Vector.Forward" Glyph="E72A"/>
+    <n:FluentIcon x:Key="Vector.Play" Glyph="E768"/>
+    <n:FluentIcon x:Key="Vector.Pause" Glyph="E769"/>
+    <n:FluentIcon x:Key="Vector.Pause.Color" Glyph="E769"/>
+    <n:FluentIcon x:Key="Vector.Stop" Glyph="E71A"/>
+    <n:FluentIcon x:Key="Vector.First.Green" Glyph="E892"/>
+    <n:FluentIcon x:Key="Vector.Previous.Green" Glyph="E76B"/>
+    <n:FluentIcon x:Key="Vector.Next.Green" Glyph="E76C"/>
+    <n:FluentIcon x:Key="Vector.Last.Green" Glyph="E893"/>
+    <n:FluentIcon x:Key="Vector.Delay" Glyph="E916"/>
+    <n:FluentIcon x:Key="Vector.OverrideDelay" Glyph="E916"/>
+    <n:FluentIcon x:Key="Vector.IncreaseDecreaseDelay" Glyph="E916"/>
+    <n:FluentIcon x:Key="Vector.ScaleDelay" Glyph="E916"/>
+    <n:FluentIcon x:Key="Vector.Delay.Minute" Glyph="E823"/>
+    <n:FluentIcon x:Key="Vector.Delay.Hour" Glyph="E823"/>
+    <n:FluentIcon x:Key="Vector.Clock" Glyph="E823"/>
+    <n:FluentIcon x:Key="Vector.Yoyo" Glyph="E8B1"/>
+    <n:FluentIcon x:Key="Vector.MoveLeft" Glyph="E72B"/>
+    <n:FluentIcon x:Key="Vector.MoveRight" Glyph="E72A"/>
+    <n:FluentIcon x:Key="Vector.Resize" Glyph="E744"/>
+    <n:FluentIcon x:Key="Vector.WidthHeight" Glyph="E744"/>
+    <n:FluentIcon x:Key="Vector.Crop" Glyph="E7A8"/>
+    <n:FluentIcon x:Key="Vector.FlipHorizontal" Glyph="E8AB"/>
+    <n:FluentIcon x:Key="Vector.FlipVertical" Glyph="E8CB"/>
+    <n:FluentIcon x:Key="Vector.RotateRight90" Glyph="E7AD"/>
+    <n:FluentIcon x:Key="Vector.RotateLeft90" Glyph="E80C"/>
+    <n:FluentIcon x:Key="Vector.Caption" Glyph="E7F0"/>
+    <n:FluentIcon x:Key="Vector.FreeText" Glyph="E8D2"/>
+    <n:FluentIcon x:Key="Vector.TitleFrame" Glyph="E8A1"/>
+    <n:FluentIcon x:Key="Vector.Number" Glyph="E8EF"/>
+    <n:FluentIcon x:Key="Vector.FreeDrawing" Glyph="EE56"/>
+    <n:FluentIcon x:Key="Vector.Pen" Glyph="E70F"/>
+    <n:FluentIcon x:Key="Vector.Eraser" Glyph="E75C"/>
+    <n:FluentIcon x:Key="Vector.StrokeEraser" Glyph="E75C"/>
+    <n:FluentIcon x:Key="Vector.Ellipse" Glyph="EA3A"/>
+    <n:FluentIcon x:Key="Vector.Rectangle" Glyph="E739"/>
+    <n:FluentIcon x:Key="Vector.Border" Glyph="ECAA"/>
+    <n:FluentIcon x:Key="Vector.Shadow" Glyph="E81E"/>
+    <n:FluentIcon x:Key="Vector.Watermark" Glyph="E8EC"/>
+    <n:FluentIcon x:Key="Vector.Cinemagraph" Glyph="E7AA"/>
+    <n:FluentIcon x:Key="Vector.Obfuscate" Glyph="E7EF"/>
+    <n:FluentIcon x:Key="Vector.Pixelate" Glyph="E80A"/>
+    <n:FluentIcon x:Key="Vector.Blur" Glyph="E7B3"/>
+    <n:FluentIcon x:Key="Vector.Colors" Glyph="E790"/>
+    <n:FluentIcon x:Key="Vector.Invert" Glyph="EF1F"/>
+    <n:FluentIcon x:Key="Vector.Lighten" Glyph="E706"/>
+    <n:FluentIcon x:Key="Vector.Darken" Glyph="E793"/>
+    <n:FluentIcon x:Key="Vector.Encoder" Glyph="F0E3"/>
+    <n:FluentIcon x:Key="Vector.Translate" Glyph="E8C1"/>
+    <n:FluentIcon x:Key="Vector.Temporary" Glyph="E7B8"/>
+    <n:FluentIcon x:Key="Vector.Web" Glyph="E753"/>
+    <n:FluentIcon x:Key="Vector.Extras" Glyph="E74C"/>
+    <n:FluentIcon x:Key="Vector.Money" Glyph="EB51"/>
+    <n:FluentIcon x:Key="Vector.Fade" Glyph="F08C"/>
+    <n:FluentIcon x:Key="Vector.Slide" Glyph="EA5B"/>
+    <n:FluentIcon x:Key="Vector.Arrow.Blue.Right" Glyph="E72A" Brush="Fluent.Accent"/>
+    <n:FluentIcon x:Key="Vector.Arrow.Blue.Left" Glyph="E72B" Brush="Fluent.Accent"/>
+    <n:FluentIcon x:Key="Vector.Arrow.Blue.Top" Glyph="E70E" Brush="Fluent.Accent"/>
+    <n:FluentIcon x:Key="Vector.Arrow.Blue.Bottom" Glyph="E70D" Brush="Fluent.Accent"/>
+    <n:FluentIcon x:Key="Vector.Ok" Glyph="E73E" Brush="Fluent.Success"/>
+    <n:FluentIcon x:Key="Vector.Ok.Round" Glyph="E930" Brush="Fluent.Success"/>
+    <n:FluentIcon x:Key="Vector.Cancel" Glyph="E711"/>
+    <n:FluentIcon x:Key="Vector.Cancel.Round" Glyph="E783" Brush="Fluent.Critical"/>
+    <n:FluentIcon x:Key="Vector.Close" Glyph="E8BB"/>
+    <n:FluentIcon x:Key="Vector.Minimize" Glyph="E921"/>
+    <n:FluentIcon x:Key="Vector.Add" Glyph="E710"/>
+    <n:FluentIcon x:Key="Vector.Info" Glyph="E946" Brush="Fluent.Accent"/>
+    <n:FluentIcon x:Key="Vector.Warning" Glyph="E7BA" Brush="Fluent.Caution"/>
+    <n:FluentIcon x:Key="Vector.Question" Glyph="E897"/>
+    <n:FluentIcon x:Key="Vector.Synchronize" Glyph="E895"/>
+    <n:FluentIcon x:Key="Vector.Progress" Glyph="E9F3" Brush="Fluent.Accent"/>
+</ResourceDictionary>

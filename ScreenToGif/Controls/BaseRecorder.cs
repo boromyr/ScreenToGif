@@ -12,7 +12,7 @@ namespace ScreenToGif.Controls;
 public class BaseRecorder : Window
 {
     public static readonly DependencyProperty StageProperty = DependencyProperty.Register(nameof(Stage), typeof(RecorderStages), typeof(BaseRecorder), new FrameworkPropertyMetadata(RecorderStages.Stopped));
-    public static readonly DependencyProperty FrameCountProperty = DependencyProperty.Register(nameof(FrameCount), typeof(int), typeof(BaseRecorder), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender));
+    public static readonly DependencyProperty FrameCountProperty = DependencyProperty.Register(nameof(FrameCount), typeof(int), typeof(BaseRecorder), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender, FrameCount_PropertyChanged));
     public static readonly DependencyProperty HasImpreciseCaptureProperty = DependencyProperty.Register(nameof(HasImpreciseCapture), typeof(bool), typeof(BaseRecorder), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
 
     /// <summary>
@@ -46,6 +46,14 @@ public class BaseRecorder : Window
     {
         get => (bool)GetValue(HasImpreciseCaptureProperty);
         set => SetValue(HasImpreciseCaptureProperty, value);
+    }
+
+    private static void FrameCount_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        //Some commands (discard, stop, quick gif) depend on having at least one frame.
+        //Without this, the buttons would only appear after the next user input on the window.
+        if ((int)e.OldValue == 0 != ((int)e.NewValue == 0))
+            CommandManager.InvalidateRequerySuggested();
     }
 
     /// <summary>

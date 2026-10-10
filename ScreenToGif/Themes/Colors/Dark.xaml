@@ -4,6 +4,29 @@
 
     <s:Double x:Key="Element.Opacity">0.8</s:Double>
     
+    <!--Fluent palette (Windows 11). The legacy brushes below are mapped to these colors.-->
+    <Color x:Key="Fluent.Color.Window">#FF202020</Color>
+    <Color x:Key="Fluent.Color.Card">#FF2B2B2B</Color>
+    <Color x:Key="Fluent.Color.CardBorder">#FF1D1D1D</Color>
+    <Color x:Key="Fluent.Color.Divider">#FF3A3A3A</Color>
+    <Color x:Key="Fluent.Color.Control">#FF373737</Color>
+    <Color x:Key="Fluent.Color.ControlHover">#FF3D3D3D</Color>
+    <Color x:Key="Fluent.Color.ControlPressed">#FF303030</Color>
+    <Color x:Key="Fluent.Color.ControlBorder">#FF434343</Color>
+    <Color x:Key="Fluent.Color.ControlBorderHover">#FF4E4E4E</Color>
+    <Color x:Key="Fluent.Color.Input">#FF2D2D2D</Color>
+    <Color x:Key="Fluent.Color.InputFocused">#FF1F1F1F</Color>
+    <Color x:Key="Fluent.Color.Text">#FFFFFFFF</Color>
+    <Color x:Key="Fluent.Color.TextSecondary">#FFC8C8C8</Color>
+    <Color x:Key="Fluent.Color.TextOnAccent">#FF000000</Color>
+    <Color x:Key="Fluent.Color.SubtleHover">#12FFFFFF</Color>
+    <Color x:Key="Fluent.Color.SubtlePressed">#1EFFFFFF</Color>
+    <Color x:Key="Fluent.Color.Record">#FFE5484D</Color>
+    <Color x:Key="Fluent.Color.Success">#FF6CCB5F</Color>
+    <Color x:Key="Fluent.Color.Critical">#FFFF99A4</Color>
+    <Color x:Key="Fluent.Color.Caution">#FFFCE100</Color>
+    <x:Static x:Key="Fluent.Color.Accent" Member="SystemColors.AccentColorLight2"/>
+
     <!--Shadows-->
     <DropShadowEffect x:Key="Shadow.Background.Tiny" ShadowDepth="0" Color="#FF2A2A2A" Opacity=".6" BlurRadius="1" RenderingBias="Quality"/>
     <DropShadowEffect x:Key="Shadow.Background.Small" ShadowDepth="0" Color="#FF2A2A2A" Opacity=".6" BlurRadius="2" RenderingBias="Quality"/>
@@ -20,56 +43,56 @@
     <Color x:Key="Gradient.Border.Light">#4F444C55</Color>
     
     <!--Colors-->
-    <SolidColorBrush x:Key="Panel.Background" Color="#FF202020"/>
-    <SolidColorBrush x:Key="Panel.Background.Level2" Color="#FF262626"/>
-    <SolidColorBrush x:Key="Panel.Background.Level3" Color="#FF2A2A2A"/>
-    <SolidColorBrush x:Key="Panel.Background.Level4" Color="#FF323130"/>
+    <SolidColorBrush x:Key="Panel.Background" Color="{StaticResource Fluent.Color.Window}"/>
+    <SolidColorBrush x:Key="Panel.Background.Level2" Color="{StaticResource Fluent.Color.Card}"/>
+    <SolidColorBrush x:Key="Panel.Background.Level3" Color="{StaticResource Fluent.Color.Window}"/>
+    <SolidColorBrush x:Key="Panel.Background.Level4" Color="{StaticResource Fluent.Color.Card}"/>
 
-    <SolidColorBrush x:Key="Element.Background" Color="#FF323232"/>
-    <SolidColorBrush x:Key="Element.Background.Hover" Color="#FF333337"/>
-    <SolidColorBrush x:Key="Element.Background.Focused" Color="#FF252525"/>
-    <SolidColorBrush x:Key="Element.Background.Pressed" Color="#FF888888"/>
-    <SolidColorBrush x:Key="Element.Background.Checked" Color="#FF484644"/>
-    <SolidColorBrush x:Key="Element.Background.Back" Color="#FF343434"/>
-    <SolidColorBrush x:Key="Element.Background.ReadOnly" Color="#FF343434"/>
+    <SolidColorBrush x:Key="Element.Background" Color="{StaticResource Fluent.Color.Input}"/>
+    <SolidColorBrush x:Key="Element.Background.Hover" Color="{StaticResource Fluent.Color.ControlHover}"/>
+    <SolidColorBrush x:Key="Element.Background.Focused" Color="{StaticResource Fluent.Color.InputFocused}"/>
+    <SolidColorBrush x:Key="Element.Background.Pressed" Color="{StaticResource Fluent.Color.ControlPressed}"/>
+    <SolidColorBrush x:Key="Element.Background.Checked" Color="{StaticResource Fluent.Color.SubtlePressed}"/>
+    <SolidColorBrush x:Key="Element.Background.Back" Color="{StaticResource Fluent.Color.Window}"/>
+    <SolidColorBrush x:Key="Element.Background.ReadOnly" Color="{StaticResource Fluent.Color.Window}"/>
 
-    <SolidColorBrush x:Key="Element.Foreground" Color="#FFE8E8E8"/>
-    <SolidColorBrush x:Key="Element.Foreground.Medium" Color="#FFBBBBBB"/>
-    <SolidColorBrush x:Key="Element.Foreground.Gray112" Color="#FF8F8F8F"/>
+    <SolidColorBrush x:Key="Element.Foreground" Color="{StaticResource Fluent.Color.Text}"/>
+    <SolidColorBrush x:Key="Element.Foreground.Medium" Color="{StaticResource Fluent.Color.TextSecondary}"/>
+    <SolidColorBrush x:Key="Element.Foreground.Gray112" Color="{StaticResource Fluent.Color.TextSecondary}"/>
     <SolidColorBrush x:Key="Element.Foreground.Gray150" Color="#FF696969"/>
     <SolidColorBrush x:Key="Element.Foreground.Watermark" Color="#FF666666"/>
     <SolidColorBrush x:Key="Element.Foreground.Gray192" Color="#FF4F4F4F"/>
     <SolidColorBrush x:Key="Element.Foreground.Gray208" Color="#FF3F3F3F"/>
-    <SolidColorBrush x:Key="Element.Foreground.Header" Color="#FF566C99"/>
+    <SolidColorBrush x:Key="Element.Foreground.Header" Color="{StaticResource Fluent.Color.Accent}"/>
     <SolidColorBrush x:Key="Element.Foreground.Detail" Color="#FF279645"/>
-    <SolidColorBrush x:Key="Element.Foreground.Hint" Color="#FF007000"/>
+    <SolidColorBrush x:Key="Element.Foreground.Hint" Color="{StaticResource Fluent.Color.Success}"/>
 
-    <SolidColorBrush x:Key="Element.Border" Color="#FF545454"/>
-    <SolidColorBrush x:Key="Element.Border.Medium" Color="#FF182E4E"/>
-    <SolidColorBrush x:Key="Element.Border.Light" Color="#FF444C55"/>
-    <SolidColorBrush x:Key="Element.Border.Hover" Color="#FF2E3338"/>
-    <SolidColorBrush x:Key="Element.Border.Pressed" Color="#FF113F6F"/>
+    <SolidColorBrush x:Key="Element.Border" Color="{StaticResource Fluent.Color.ControlBorder}"/>
+    <SolidColorBrush x:Key="Element.Border.Medium" Color="{StaticResource Fluent.Color.ControlBorder}"/>
+    <SolidColorBrush x:Key="Element.Border.Light" Color="{StaticResource Fluent.Color.Divider}"/>
+    <SolidColorBrush x:Key="Element.Border.Hover" Color="{StaticResource Fluent.Color.ControlBorderHover}"/>
+    <SolidColorBrush x:Key="Element.Border.Pressed" Color="{StaticResource Fluent.Color.Accent}"/>
     <SolidColorBrush x:Key="Element.Border.Required" Color="#FF00004D"/>
 
-    <SolidColorBrush x:Key="Element.Glyph" Color="#FF888888"/>
-    <SolidColorBrush x:Key="Element.Glyph.Strong" Color="#FFDDDDDD"/>
-    <SolidColorBrush x:Key="Element.Glyph.Hover" Color="#FFBBBBBB"/>
-    <SolidColorBrush x:Key="Element.Glyph.Pressed" Color="#FFCBCBCB"/>
+    <SolidColorBrush x:Key="Element.Glyph" Color="{StaticResource Fluent.Color.TextSecondary}"/>
+    <SolidColorBrush x:Key="Element.Glyph.Strong" Color="{StaticResource Fluent.Color.Text}"/>
+    <SolidColorBrush x:Key="Element.Glyph.Hover" Color="{StaticResource Fluent.Color.Text}"/>
+    <SolidColorBrush x:Key="Element.Glyph.Pressed" Color="{StaticResource Fluent.Color.Text}"/>
 
-    <SolidColorBrush x:Key="Element.Selection" Color="#FF005394"/>
+    <SolidColorBrush x:Key="Element.Selection" Color="{StaticResource Fluent.Color.Accent}"/>
     <SolidColorBrush x:Key="Element.Selection.Inactive" Color="#FFF0F0F0"/>
 
     <!--Buttons-->
-    <SolidColorBrush x:Key="Brush.Button.Background" Color="#FF202020"/>
-    <SolidColorBrush x:Key="Brush.Button.Background.Hover" Color="#AA34373B"/>
-    <SolidColorBrush x:Key="Brush.Button.Background.Checked" Color="#802D3D54"/>
-    <SolidColorBrush x:Key="Brush.Button.Background.Pressed" Color="#F02A313B"/>
-    <SolidColorBrush x:Key="Brush.Button.Background.Focused" Color="#AA373E42"/>
+    <SolidColorBrush x:Key="Brush.Button.Background" Color="{StaticResource Fluent.Color.Control}"/>
+    <SolidColorBrush x:Key="Brush.Button.Background.Hover" Color="{StaticResource Fluent.Color.SubtleHover}"/>
+    <SolidColorBrush x:Key="Brush.Button.Background.Checked" Color="{StaticResource Fluent.Color.SubtlePressed}"/>
+    <SolidColorBrush x:Key="Brush.Button.Background.Pressed" Color="{StaticResource Fluent.Color.SubtlePressed}"/>
+    <SolidColorBrush x:Key="Brush.Button.Background.Focused" Color="Transparent"/>
 
-    <SolidColorBrush x:Key="Brush.Button.Border" Color="#FF545454"/>
-    <SolidColorBrush x:Key="Brush.Button.Border.Hover" Color="#FF37404D"/>
-    <SolidColorBrush x:Key="Brush.Button.Border.Pressed" Color="#FF113854"/>
-    <SolidColorBrush x:Key="Brush.Button.Border.Focused" Color="#FF113E54"/>
+    <SolidColorBrush x:Key="Brush.Button.Border" Color="{StaticResource Fluent.Color.ControlBorder}"/>
+    <SolidColorBrush x:Key="Brush.Button.Border.Hover" Color="{StaticResource Fluent.Color.ControlBorder}"/>
+    <SolidColorBrush x:Key="Brush.Button.Border.Pressed" Color="{StaticResource Fluent.Color.ControlBorder}"/>
+    <SolidColorBrush x:Key="Brush.Button.Border.Focused" Color="{StaticResource Fluent.Color.Accent}"/>
 
     <!--Button • Paypal-->
     <SolidColorBrush x:Key="Brush.Button.Paypal.Background" Color="#80FFF8EB"/>
@@ -117,9 +140,9 @@
     <SolidColorBrush x:Key="Brush.DataGrid.Header.Glyph.Pressed" Color="WhiteSmoke"/>
 
     <!--MenuItem-->
-    <SolidColorBrush x:Key="Brush.MenuItem.Background.Hover" Color="#FF505050"/>
-    <SolidColorBrush x:Key="Brush.MenuItem.Border.Hover" Color="#FF505050"/>
-    <SolidColorBrush x:Key="Brush.MenuItem.Background.Pressed" Color="#FF606060"/>
+    <SolidColorBrush x:Key="Brush.MenuItem.Background.Hover" Color="{StaticResource Fluent.Color.SubtleHover}"/>
+    <SolidColorBrush x:Key="Brush.MenuItem.Border.Hover" Color="Transparent"/>
+    <SolidColorBrush x:Key="Brush.MenuItem.Background.Pressed" Color="{StaticResource Fluent.Color.SubtlePressed}"/>
    
     <!--StatusBand-->
     <SolidColorBrush x:Key="Brush.StatusBand.Info" Color="#FF353554"/>
@@ -127,17 +150,17 @@
     <SolidColorBrush x:Key="Brush.StatusBand.Error" Color="#FF5C0A0A"/>
 
     <!--Hyperlink-->
-    <SolidColorBrush x:Key="Brush.Hyperlink" Color="#FF6666FF"/>
+    <SolidColorBrush x:Key="Brush.Hyperlink" Color="{StaticResource Fluent.Color.Accent}"/>
     <SolidColorBrush x:Key="Brush.Hyperlink.Hover" Color="#FFFF3838"/>
     <SolidColorBrush x:Key="Brush.Hyperlink.Disabled" Color="#FF447373"/>
 
     <!--ListBoxItem-->
-    <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#1226A0DA"/>
-    <SolidColorBrush x:Key="Item.MouseOver.Border" Color="#8826A0DA"/>
-    <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3026A0DA"/>
-    <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#4126A0DA"/>
-    <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#3526A0DA"/>
-    <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#F026A0DA"/>
+    <SolidColorBrush x:Key="Item.MouseOver.Background" Color="{StaticResource Fluent.Color.SubtleHover}"/>
+    <SolidColorBrush x:Key="Item.MouseOver.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="{StaticResource Fluent.Color.SubtleHover}"/>
+    <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="{StaticResource Fluent.Color.ControlBorderHover}"/>
+    <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="{StaticResource Fluent.Color.SubtlePressed}"/>
+    <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="{StaticResource Fluent.Color.Accent}"/>
 
     <!--ProgressBar-->
     <SolidColorBrush x:Key="Brush.ProgressBar.Detail" Color="#60000000"/>
@@ -145,4 +168,30 @@
     <SolidColorBrush x:Key="Brush.ProgressBar.Info" Color="#FF004175"/>
     <SolidColorBrush x:Key="Brush.ProgressBar.Warning" Color="#FF767A04"/>
     <SolidColorBrush x:Key="Brush.ProgressBar.Danger" Color="#FF870300"/>
+
+    <!--Fluent brushes-->
+    <SolidColorBrush x:Key="Fluent.Window.Background" Color="{StaticResource Fluent.Color.Window}"/>
+    <SolidColorBrush x:Key="Fluent.Card.Background" Color="{StaticResource Fluent.Color.Card}"/>
+    <SolidColorBrush x:Key="Fluent.Card.Border" Color="{StaticResource Fluent.Color.CardBorder}"/>
+    <SolidColorBrush x:Key="Fluent.Divider" Color="{StaticResource Fluent.Color.Divider}"/>
+    <SolidColorBrush x:Key="Fluent.Control.Background" Color="{StaticResource Fluent.Color.Control}"/>
+    <SolidColorBrush x:Key="Fluent.Control.Background.Hover" Color="{StaticResource Fluent.Color.ControlHover}"/>
+    <SolidColorBrush x:Key="Fluent.Control.Background.Pressed" Color="{StaticResource Fluent.Color.ControlPressed}"/>
+    <SolidColorBrush x:Key="Fluent.Control.Border" Color="{StaticResource Fluent.Color.ControlBorder}"/>
+    <SolidColorBrush x:Key="Fluent.Control.Border.Hover" Color="{StaticResource Fluent.Color.ControlBorderHover}"/>
+    <SolidColorBrush x:Key="Fluent.Input.Background" Color="{StaticResource Fluent.Color.Input}"/>
+    <SolidColorBrush x:Key="Fluent.Input.Background.Focused" Color="{StaticResource Fluent.Color.InputFocused}"/>
+    <SolidColorBrush x:Key="Fluent.Text.Primary" Color="{StaticResource Fluent.Color.Text}"/>
+    <SolidColorBrush x:Key="Fluent.Text.Secondary" Color="{StaticResource Fluent.Color.TextSecondary}"/>
+    <SolidColorBrush x:Key="Fluent.Text.OnAccent" Color="{StaticResource Fluent.Color.TextOnAccent}"/>
+    <SolidColorBrush x:Key="Fluent.Subtle.Hover" Color="{StaticResource Fluent.Color.SubtleHover}"/>
+    <SolidColorBrush x:Key="Fluent.Subtle.Pressed" Color="{StaticResource Fluent.Color.SubtlePressed}"/>
+    <SolidColorBrush x:Key="Fluent.Record" Color="{StaticResource Fluent.Color.Record}"/>
+    <SolidColorBrush x:Key="Fluent.Success" Color="{StaticResource Fluent.Color.Success}"/>
+    <SolidColorBrush x:Key="Fluent.Critical" Color="{StaticResource Fluent.Color.Critical}"/>
+    <SolidColorBrush x:Key="Fluent.Caution" Color="{StaticResource Fluent.Color.Caution}"/>
+    <SolidColorBrush x:Key="Fluent.Accent" Color="{StaticResource Fluent.Color.Accent}"/>
+    <SolidColorBrush x:Key="Fluent.Accent.Hover" Color="{StaticResource Fluent.Color.Accent}" Opacity="0.9"/>
+    <SolidColorBrush x:Key="Fluent.Accent.Pressed" Color="{StaticResource Fluent.Color.Accent}" Opacity="0.8"/>
+    <DropShadowEffect x:Key="Fluent.Shadow" ShadowDepth="1" Direction="270" Color="Black" Opacity=".3" BlurRadius="8" RenderingBias="Performance"/>
 </ResourceDictionary>

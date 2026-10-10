@@ -292,7 +292,7 @@ public class PluginSettingsViewModel: BaseViewModel
     public async Task<string> UnpackFFmpeg(string path)
     {
         await using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var archive = SevenZipArchive.Open(fileStream);
+        using var archive = SevenZipArchive.OpenArchive(fileStream);
 
         var entry = archive.Entries.FirstOrDefault(x => x.Key.Contains("ffmpeg.exe"));
 
@@ -340,7 +340,7 @@ public class PluginSettingsViewModel: BaseViewModel
         if (File.Exists(destination))
             File.Delete(destination);
 
-        using (var archive = TarArchive.Open(tempPath))
+        using (var archive = TarArchive.OpenArchive(tempPath))
         {
             foreach (var entry in archive.Entries)
             {

@@ -28,6 +28,8 @@
                 <ResourceDictionary Source="/Themes/Button.xaml"/>
                 <ResourceDictionary Source="/Themes/Common.xaml"/>
                 <ResourceDictionary Source="/Themes/ComboBox.xaml"/>
+                <ResourceDictionary Source="/Themes/Fluent.xaml"/>
+                <ResourceDictionary Source="/Themes/FluentIcons.xaml"/>
 
                 <!--Localizations-->
                 <ResourceDictionary Source="/Resources/Localization/StringResources.ar.xaml"/>
@@ -164,6 +166,9 @@
                                 </Trigger>
                                 <Trigger Property="IsChecked" Value="True">
                                     <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+                                    <Setter Property="Background" TargetName="radioButtonBorder" Value="{DynamicResource Fluent.Accent}"/>
+                                    <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="{DynamicResource Fluent.Accent}"/>
+                                    <Setter Property="Fill" TargetName="optionMark" Value="{DynamicResource Fluent.Text.OnAccent}"/>
                                 </Trigger>
                                 <Trigger Property="IsChecked" Value="{x:Null}">
                                     <Setter Property="Opacity" TargetName="optionMark" Value="0.56"/>

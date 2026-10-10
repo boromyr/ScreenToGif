@@ -24,6 +24,18 @@ public static class WindowHelper
         return new WindowInteropHelper(window).Handle;
     }
 
+    /// <summary>
+    /// Removes the window from screen captures (WDA_EXCLUDEFROMCAPTURE, Windows 10 2004+).
+    /// The window stays visible on screen.
+    /// </summary>
+    /// <returns>True if the OS accepted the exclusion.</returns>
+    public static bool ExcludeFromCapture(this Window window)
+    {
+        const uint excludeFromCapture = 0x11;
+
+        return User32.SetWindowDisplayAffinity(GetWindowPtr(window), excludeFromCapture);
+    }
+
     public static void DisableMaximize(this Window window)
     {
         var handle = GetWindowPtr(window);

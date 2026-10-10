@@ -1,0 +1,228 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:n="clr-namespace:ScreenToGif.Controls">
+
+    <!--Windows 11 styles, used by the editor and the startup window. Colors are defined as Fluent.* in each theme (Themes/Colors).-->
+
+    <!--Button • Standard (bordered)-->
+    <Style x:Key="Fluent.Button.Standard" TargetType="{x:Type n:ExtendedButton}" BasedOn="{StaticResource {x:Type n:ExtendedButton}}">
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Primary}"/>
+        <Setter Property="Background" Value="{DynamicResource Fluent.Control.Background}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Control.Border}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Control.Background.Hover}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Control.Border}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Control.Background.Pressed}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Control.Border}"/>
+                <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Secondary}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Accent}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--Button • Accent (primary action)-->
+    <Style x:Key="Fluent.Button.Accent" TargetType="{x:Type n:ExtendedButton}" BasedOn="{StaticResource {x:Type n:ExtendedButton}}">
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.OnAccent}"/>
+        <Setter Property="Background" Value="{DynamicResource Fluent.Accent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Accent}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Accent.Hover}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Accent.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Accent.Pressed}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Accent.Pressed}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Text.Primary}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Control.Background.Pressed}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Control.Background.Pressed}"/>
+                <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Secondary}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--Button • Subtle • Vertical (ribbon, large)-->
+    <Style x:Key="Fluent.Button.Vertical" TargetType="{x:Type n:ExtendedButton}" BasedOn="{StaticResource Style.Button.Vertical}">
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Primary}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Pressed}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--Button • Subtle • Horizontal (ribbon, small)-->
+    <Style x:Key="Fluent.Button.Horizontal" TargetType="{x:Type n:ExtendedButton}" BasedOn="{StaticResource Style.Button.Horizontal}">
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Primary}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Pressed}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--Button • Subtle • Icon only-->
+    <Style x:Key="Fluent.Button.NoText" TargetType="{x:Type n:ExtendedButton}" BasedOn="{StaticResource Style.Button.NoText}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Pressed}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--RepeatButton • Subtle • Vertical-->
+    <Style x:Key="Fluent.RepeatButton.Vertical" TargetType="{x:Type n:ExtendedRepeatButton}" BasedOn="{StaticResource Style.RepeatButton.Vertical}">
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Primary}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Pressed}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--RepeatButton • Subtle • Icon only-->
+    <Style x:Key="Fluent.RepeatButton.NoText" TargetType="{x:Type n:ExtendedRepeatButton}" BasedOn="{StaticResource Style.RepeatButton.NoText}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Pressed}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--ToggleButton • Subtle-->
+    <Style x:Key="Fluent.ToggleButton.NoBorder" TargetType="{x:Type n:ExtendedToggleButton}" BasedOn="{StaticResource Style.ToggleButton.NoBorder}">
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Primary}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Pressed}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Subtle.Pressed}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--Button • Tile (startup window)-->
+    <Style x:Key="Fluent.Button.Tile" TargetType="{x:Type n:ExtendedButton}" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Primary}"/>
+        <Setter Property="Background" Value="{DynamicResource Fluent.Card.Background}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Fluent.Card.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="6,8,6,0"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type n:ExtendedButton}">
+                    <Grid>
+                        <Border CornerRadius="8" Background="{TemplateBinding Background}" Effect="{DynamicResource Fluent.Shadow}"/>
+
+                        <Border x:Name="MainBorder" CornerRadius="8" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Border Background="{TemplateBinding Icon}" Opacity="{DynamicResource Element.Opacity}" HorizontalAlignment="Center"
+                                        Height="{TemplateBinding ContentHeight}" Width="{TemplateBinding ContentWidth}"/>
+
+                                <TextBlock Text="{TemplateBinding Text}" Margin="{TemplateBinding Padding}" TextAlignment="Center" TextWrapping="{TemplateBinding TextWrapping}"
+                                           MaxWidth="{Binding Path=ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="FocusBorder" CornerRadius="8" BorderThickness="2" BorderBrush="{DynamicResource Fluent.Accent}" Visibility="Collapsed"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="FocusBorder" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Control.Background.Hover}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Fluent.Control.Background.Pressed}"/>
+                <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Secondary}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--Ribbon • Group label-->
+    <Style x:Key="Fluent.Label.RibbonGroup" TargetType="{x:Type Label}">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Foreground" Value="{DynamicResource Fluent.Text.Secondary}"/>
+        <Setter Property="Padding" Value="0,0,0,2"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <!--Ribbon • Group separator-->
+    <Style x:Key="Fluent.Separator.Ribbon" TargetType="{x:Type Separator}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <Border Width="1" Margin="0,8" Background="{DynamicResource Fluent.Divider}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

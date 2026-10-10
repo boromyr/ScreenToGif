@@ -1,4 +1,6 @@
 using ScreenToGif.Domain.Enums;
+using ScreenToGif.Domain.Enums.Native;
+using ScreenToGif.Native.External;
 using ScreenToGif.Util;
 using ScreenToGif.Util.Settings;
 using ScreenToGif.Views.Settings;
@@ -24,7 +26,13 @@ public partial class Options : INotification
     internal const int PluginsIndex = 8;
     internal const int DonateIndex = 9;
     internal const int AboutIndex = 10;
-    
+
+    //Default bounds, in physical pixels.
+    private const int DefaultLeft = 557;
+    private const int DefaultTop = 189;
+    private const int DefaultWidth = 1446;
+    private const int DefaultHeight = 1148;
+
     public Options()
     {
         InitializeComponent();
@@ -33,6 +41,15 @@ public partial class Options : INotification
     public Options(int index) : this()
     {
         Navigate(index);
+    }
+
+    protected override void OnSourceInitialized(System.EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        //Sets the default position and size in pixels, independently of the screen scaling.
+        User32.SetWindowPos(new WindowInteropHelper(this).Handle, System.IntPtr.Zero, DefaultLeft, DefaultTop, DefaultWidth, DefaultHeight,
+            SetWindowPosFlags.NoZOrder | SetWindowPosFlags.NoActivate);
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
