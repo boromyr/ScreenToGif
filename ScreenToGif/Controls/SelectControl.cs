@@ -310,6 +310,10 @@ public class SelectControl : Control
         _left.DragDelta += HandleLeft;
         _right.DragDelta += HandleRight;
 
+        //Snap the cursor to the edge being resized.
+        foreach (var thumb in new[] { _topLeft, _topRight, _bottomLeft, _bottomRight, _top, _bottom, _left, _right })
+            thumb.DragStarted += Thumb_DragStarted;
+
         //Drag to move.
         _rectangle.MouseLeftButtonDown += Rectangle_MouseLeftButtonDown;
         _rectangle.MouseMove += Rectangle_MouseMove;
@@ -1391,11 +1395,72 @@ public class SelectControl : Control
     ///<summary>
     ///Handler for resizing from the top-left.
     ///</summary>
+    private void Thumb_DragStarted(object sender, DragStartedEventArgs e)
+    {
+        if (sender is not Thumb thumb)
+            return;
+
+        //Moves the cursor to the exact corner/side being resized, so that the magnifier points to the edge of the selection.
+        var screen = PointToScreen(GetAnchor(thumb));
+        User32.SetCursorPos((int)Math.Round(screen.X), (int)Math.Round(screen.Y));
+    }
+
+    /// <summary>
+    /// The point of the selection that is controlled by the thumb (corner or middle of the side).
+    /// The right/bottom edges are one pixel after the cursor, the same as when drawing the selection.
+    /// </summary>
+    private Point GetAnchor(Thumb thumb)
+    {
+        var right = Selected.Right - 1;
+        var bottom = Selected.Bottom - 1;
+        var centerX = Selected.Left + Selected.Width / 2;
+        var centerY = Selected.Top + Selected.Height / 2;
+
+        if (thumb == _topLeft)
+            return new Point(Selected.Left, Selected.Top);
+
+        if (thumb == _topRight)
+            return new Point(right, Selected.Top);
+
+        if (thumb == _bottomLeft)
+            return new Point(Selected.Left, bottom);
+
+        if (thumb == _bottomRight)
+            return new Point(right, bottom);
+
+        if (thumb == _top)
+            return new Point(centerX, Selected.Top);
+
+        if (thumb == _bottom)
+            return new Point(centerX, bottom);
+
+        if (thumb == _left)
+            return new Point(Selected.Left, centerY);
+
+        return new Point(right, centerY);
+    }
+
+    /// <summary>
+    /// While a thumb is being dragged, the edge follows the cursor position instead of the offset from where the thumb was grabbed.
+    /// Keyboard resizing (not dragging) keeps the given change.
+    /// </summary>
+    private DragDeltaEventArgs FollowCursor(object sender, DragDeltaEventArgs e)
+    {
+        if (sender is not Thumb { IsDragging: true } thumb)
+            return e;
+
+        var anchor = GetAnchor(thumb);
+        var point = Mouse.GetPosition(this);
+
+        return new DragDeltaEventArgs(point.X - anchor.X, point.Y - anchor.Y);
+    }
+
     private void HandleTopLeft(object sender, DragDeltaEventArgs e)
     {
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var width = Math.Max(Selected.Width - e.HorizontalChange, 10);
@@ -1433,6 +1498,7 @@ public class SelectControl : Control
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var width = Math.Max(Selected.Width + e.HorizontalChange, 10);
@@ -1466,6 +1532,7 @@ public class SelectControl : Control
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var width = Math.Max(Selected.Width - e.HorizontalChange, 10);
@@ -1502,6 +1569,7 @@ public class SelectControl : Control
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var width = Math.Max(Selected.Width + e.HorizontalChange, 10);
@@ -1531,6 +1599,7 @@ public class SelectControl : Control
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var width = Math.Max(Selected.Width - e.HorizontalChange, 10);
@@ -1560,6 +1629,7 @@ public class SelectControl : Control
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var height = Math.Max(Selected.Height - e.VerticalChange, 10);
@@ -1589,6 +1659,7 @@ public class SelectControl : Control
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var width = Math.Max(Selected.Width + e.HorizontalChange, 10);
@@ -1614,6 +1685,7 @@ public class SelectControl : Control
         if (!(sender is Thumb)) return;
 
         e.Handled = true;
+        e = FollowCursor(sender, e);
 
         //Change the size by the amount the user drags the cursor.
         var height = Math.Max(Selected.Height + e.VerticalChange, 10);
